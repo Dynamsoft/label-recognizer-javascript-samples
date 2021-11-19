@@ -37,13 +37,14 @@
                 console.log(select.options[index].value);
 
                 let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+                
                 let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
                     runtimeSettings: select.options[index].value
                 }));
-
+                await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                 recognizer.cameraEnhancer = cameraEnhancer;
 
-                recognizer.startScanning(true);
+                await recognizer.startScanning(true);
                 
                 recognizer.onFrameRead = async results => {
                     console.log("Labels on one frame:");

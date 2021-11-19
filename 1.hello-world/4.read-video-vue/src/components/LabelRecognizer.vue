@@ -101,26 +101,34 @@
 
 <script>
 import DLR from "../dlr";
+import CameraEnhancer from "../dce";
 
 export default {
   data() {
     return {
       bDestroyed: false,
       pRecognizer: null,
-      pEnhancer: null,
+      pCameraEnhancer: null,
     };
   },
   async mounted() {
     try {
-      this.pRecognizer = this.pRecognizer || DLR.LabelRecognizer.createInstance({
-          runtimeSettings: "video-number"
-      });
-      let recognizer = await this.pRecognizer;
+
+      let cameraEnhancer = await (this.pCameraEnhancer = this.pCameraEnhancer || CameraEnhancer.createInstance());
+      let recognizer = await (this.pRecognizer = this.pRecognizer || DLR.createInstance({
+        runtimeSettings: "video-vin"
+      }));
+
+      recognizer.cameraEnhancer = cameraEnhancer;
 
       if (this.bDestroyed) {
         recognizer.destroy();
         return;
       }
+
+      await recognizer.startScanning(true);
+      await recognizer.cameraEnhancer.setUIElement(this.$el);
+
       recognizer.onFrameRead = (results) => {
         for (let result of results) {
           for (let lineResult of result.lineResults) {
@@ -142,8 +150,7 @@ export default {
         alert(txt);
         console.log("Unique Code Found: " + result);
       }
-      await recognizer.startScanning(true);
-      await recognizer.cameraEnhancer.setUIElement(this.$el);
+      
     } catch (ex) {
       this.$emit("appendMessage", { 
         msg: ex.message,

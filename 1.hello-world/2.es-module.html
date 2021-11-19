@@ -29,9 +29,10 @@
                     runtimeSettings: "video-vin"
                 }));
 
+                await cameraEnhancer.setUIElement(LabelRecognizer.defaultUIElementURL);
                 recognizer.cameraEnhancer = cameraEnhancer;
 
-                recognizer.startScanning(true);
+                await recognizer.startScanning(true);
 
                 recognizer.onFrameRead = async results => {
                     console.log("Labels on one frame:");

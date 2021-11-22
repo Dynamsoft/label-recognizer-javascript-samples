@@ -15,7 +15,7 @@ class LabelRecognizer extends React.Component {
         try {
             let cameraEnhancer = await (this.pCameraEnhancer = this.pCameraEnhancer || DCE.createInstance());
             let recognizer = await (this.pRecognizer = this.pRecognizer || DLR.createInstance({
-                runtimeSettings: "video-vin"
+                runtimeSettings: "video-letter"
             }))
             await cameraEnhancer.setUIElement(DLR.defaultUIElementURL);
             recognizer.cameraEnhancer = cameraEnhancer;

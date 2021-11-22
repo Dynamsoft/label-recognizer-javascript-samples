@@ -33,13 +33,11 @@
         document.getElementById('btn-open-recognize').onclick = async function() {
             try {
                 let select = document.getElementById('select-value');
-                let index = select.selectedIndex;
-                console.log(select.options[index].value);
 
                 let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
                 
                 let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                    runtimeSettings: select.options[index].value
+                    runtimeSettings: select.value
                 }));
                 await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                 recognizer.cameraEnhancer = cameraEnhancer;

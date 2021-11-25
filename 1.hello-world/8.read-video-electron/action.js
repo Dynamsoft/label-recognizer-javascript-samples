@@ -1,0 +1,38 @@
+const DCE = require('dynamsoft-camera-enhancer');
+const DLR = require('keillion-dynamsoft-label-recognizer');
+
+window.onload = function () {
+
+    let pRecognizer = null;
+    let pCameraEnhancer = null;
+    document.getElementById('recognizeLabel').onclick = async () => {
+        try {
+            await DLR.LabelRecognizer.loadWasm();
+
+            let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
+            let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({
+                runtimeSettings: "video-letter"
+            }));
+
+            await cameraEnhancer.setUIElement(DLR.LabelRecognizer.defaultUIElementURL);
+            recognizer.cameraEnhancer = cameraEnhancer;
+
+            await recognizer.startScanning(true);
+
+            recognizer.onFrameRead = results => {
+                for (let result of results) {
+                    for (let lineResult of result.lineResults) {
+                        console.log(lineResult.text);
+                    }
+                }
+            };
+            recognizer.onUniqueRead = (txt) => {
+                alert(txt);
+                console.log("Unique Code Found: " + txt);
+            }
+        } catch (ex) {
+            alert(ex.message);
+            throw ex;
+        }
+    };
+}

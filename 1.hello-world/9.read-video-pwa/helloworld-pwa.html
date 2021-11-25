@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in a PWA application.">
+    <meta name="keywords" content="recognize label from camera in PWA">
+    <title>Dynamsoft Label Recognizer PWA Sample - Hello World (Decoding via Camera)</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/dlr.js"></script>
+    <link rel="manifest" href="./helloworld-pwa.webmanifest">
+</head>
+
+<body>
+    <h1 style="font-size: 1.5em;">Hello World for PWA</h1>
+    <button id='recognizeLabel'>Recognize Label via Camera</button>
+    <script>
+
+        let pRecognizer = null;
+        let pCameraEnhancer = null;
+        let latestResult = null;
+        document.getElementById('recognizeLabel').onclick = async function() {
+            Notification.requestPermission().then((result) => {
+                if (result === 'granted') {
+                    startNotificationLoop();
+                }
+            });
+            try {
+                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
+                let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({
+                    runtimeSettings: "video-letter"
+                }));
+
+                await cameraEnhancer.setUIElement(DLR.LabelRecognizer.defaultUIElementURL);
+                recognizer.cameraEnhancer = cameraEnhancer;
+
+                await recognizer.startScanning(true);
+
+                recognizer.onFrameRead = results => {
+                    for (let result of results) {
+                        for (let lineResult of result.lineResults) {
+                            console.log(lineResult.text);
+                        }
+                    }
+                };
+                recognizer.onUniqueRead = (txt) => {
+                    alert(txt);
+                    console.log("Unique Code Found: " + txt);
+                }
+            } catch (ex) {
+                alert(ex.message);
+                throw ex;
+            }
+        };
+
+        function startNotificationLoop() {
+            if (latestResult != null) {
+                const title = "New Barcode Found!";
+                const notifBody = `Barcode Text: ${latestResult}.`;
+                const options = {
+                    body: notifBody,
+                };
+                new Notification(title, options);
+                latestResult = null;
+            }
+            setTimeout(startNotificationLoop, 100);
+        }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js');
+        };
+    </script>
+</body>
+
+</html>

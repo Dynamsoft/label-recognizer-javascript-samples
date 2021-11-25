@@ -3,7 +3,11 @@
     <h1>{{ msg }} <img class="applogo" alt="Vue logo" src="../assets/logo.png" /></h1>
     <input
       type="text"
+<<<<<<< HEAD
       placeholder="The Last Recognize Label"
+=======
+      placeholder="The Last Read Barcode"
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
       id="resultText"
       v-model="resultValue"
       readonly="true"
@@ -11,8 +15,13 @@
     <div id="UIElement">
       <span style="font-size: x-large" v-if="!libLoaded">Loading Library...</span>
       <LabelRecognizer
+<<<<<<< HEAD
         v-if="bShowScanner"
         v-on:appendMessage="appendMessage"
+=======
+        v-if="bShowRecognizer"
+        @appendMessage="appendMessage"
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
       ></LabelRecognizer>
     </div>
     <div>
@@ -42,21 +51,37 @@ export default {
   setup() {
     const resultValue = ref(null);
     const libLoaded = ref(false);
+<<<<<<< HEAD
     const bShowScanner = ref(false);
+=======
+    const bShowRecognizer = ref(false);
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
     const resultItems = reactive([]);
     onMounted(async () => {
       try {
         //Load the library on page load to speed things up.
+<<<<<<< HEAD
         await DLR.loadWasm();
         libLoaded.value = true;
         showScanner();
+=======
+        DLR.initLicense("t0068MgAAAKUZULwM1SshTkeSYEV5LPo0cnYXkSYBlpGkb0XcP1NTLvP+//NMWCbQfuyxGn1hbLfqF/bV7FuoMzNPJljQqW0=");
+        await DLR.loadWasm();
+        libLoaded.value = true;
+        showRecognizer();
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
       } catch (ex) {
         alert(ex.message);
         throw ex;
       }
     });
+<<<<<<< HEAD
     const showScanner = () => {
       bShowScanner.value = true;
+=======
+    const showRecognizer = () => {
+      bShowRecognizer.value = true;
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
     };
     const appendMessage = (message) => {
       switch (message.type) {
@@ -76,12 +101,21 @@ export default {
       resultItems,
       resultValue,
       libLoaded,
+<<<<<<< HEAD
       bShowScanner,
       showScanner,
       appendMessage,
     };
   },
   components: {
+=======
+      bShowRecognizer,
+      showRecognizer,
+      appendMessage,
+    };
+  },
+  components: { 
+>>>>>>> 9c24ab824701edc3d6c95fdb18687231b9e1220e
     LabelRecognizer,
   },
 };

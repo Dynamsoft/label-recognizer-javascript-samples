@@ -39,14 +39,10 @@ class LabelRecognizer extends React.Component {
                 }
             };
 
-            recognizer.onUniqueRead = (txt, result) => {
+            recognizer.onUniqueRead = (txt) => {
                 alert(txt);
-                console.log("Unique Code Found: " + result);
+                console.log("Unique Code Found: " + txt);
             }
-
-            // this.elRef.current.appendChild(recognizer.camearEnhancer.setUIElement());
-            document.getElementsByClassName("dce-btn-close")[0].style.display = "none";
-            
         } catch (ex) {
             this.props.appendMessage({ msg: ex.message, type: "error" });
             console.error(ex);

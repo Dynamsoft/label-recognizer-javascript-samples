@@ -49,7 +49,7 @@ export default {
   async mounted() {
     //Load the library on page load to speed things up.
     try {
-      await DLR.LabelRecognizer.loadWasm();
+      await DLR.loadWasm();
       this.libLoaded = true;
       this.showRecognizer();
     } catch (ex) {

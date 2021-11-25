@@ -9,7 +9,7 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211119103311.0/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -27,8 +27,10 @@
         let pRecognizer = null;
         let pCameraEnhancer = null;
 
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211119103311.0/dist/"; 
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
+
+        Dynamsoft.DLR.LabelRecognizer.initLicense("t0068MgAAAKUZULwM1SshTkeSYEV5LPo0cnYXkSYBlpGkb0XcP1NTLvP+//NMWCbQfuyxGn1hbLfqF/bV7FuoMzNPJljQqW0=");
 
         document.getElementById('btn-open-recognize').onclick = async function() {
             try {
@@ -45,7 +47,6 @@
                 await recognizer.startScanning(true);
                 
                 recognizer.onFrameRead = async results => {
-                    console.log("Labels on one frame:");
                     for (let result of results) {
                         for (let lineResult of result.lineResults) {
                             console.log(lineResult.text);

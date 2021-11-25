@@ -116,39 +116,30 @@ export default {
 
       let cameraEnhancer = await (this.pCameraEnhancer = this.pCameraEnhancer || CameraEnhancer.createInstance());
       let recognizer = await (this.pRecognizer = this.pRecognizer || DLR.createInstance({
-        runtimeSettings: "video-vin"
+        runtimeSettings: "video-letter"
       }));
 
+      await cameraEnhancer.setUIElement(DLR.defaultUIElementURL);
       recognizer.cameraEnhancer = cameraEnhancer;
 
       if (this.bDestroyed) {
         recognizer.destroy();
+        cameraEnhancer.destroy();
         return;
       }
 
       await recognizer.startScanning(true);
-      await recognizer.cameraEnhancer.setUIElement(this.$el);
 
       recognizer.onFrameRead = (results) => {
         for (let result of results) {
           for (let lineResult of result.lineResults) {
-            this.$emit("appendMessage", {
-              format: lineResult.barcodeFormatString,
-              text: lineResult.text,
-              type: "result",
-            });
-            // if (lineResult.text.indexOf("Attention(exceptionCode") !== -1) {
-            //   this.$emit("appendMessage", { 
-            //     msg: lineResult.exception.message,
-            //     type: "error"
-            //   });
-            // }
+            console.log(lineResult.text);
           }
         }
       };
-      recognizer.onUniqueRead = (txt, result) => {
+      recognizer.onUniqueRead = (txt) => {
         alert(txt);
-        console.log("Unique Code Found: " + result);
+        console.log("Unique Code Found: " + txt);
       }
       
     } catch (ex) {
@@ -163,6 +154,7 @@ export default {
     this.bDestroyed = true;
     if (this.pRecognizer) {
       (await this.pRecognizer).destroy();
+      (await this.pCameraEnhancer).destroy();
     }
   },
 };

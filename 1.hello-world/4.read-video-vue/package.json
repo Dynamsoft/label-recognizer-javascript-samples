@@ -9,8 +9,8 @@
     },
     "dependencies": {
         "core-js": "^3.6.5",
-        "dynamsoft-javascript-barcode": "8.8.3",
-        "keillion-dynamsoft-label-recognizer": "0.20211111092019.0",
+        "dynamsoft-camera-enhancer": "2.0.3",
+        "keillion-dynamsoft-label-recognizer": "0.20211123171208.0",
         "vue": "^2.6.11"
     },
     "devDependencies": {

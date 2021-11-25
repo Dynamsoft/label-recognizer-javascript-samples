@@ -53,9 +53,9 @@
                     }
                 };
                 
-                recognizer.onUniqueRead = (txt, result) => {
+                recognizer.onUniqueRead = (txt) => {
                     alert(txt);
-                    console.log("Unique Code Found: " + result);
+                    console.log("Unique Code Found: " + txt);
                 }
             } catch (ex) {
                 alert(ex.message);

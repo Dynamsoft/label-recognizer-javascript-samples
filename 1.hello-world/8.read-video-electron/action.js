@@ -5,9 +5,12 @@ window.onload = function () {
 
     let pRecognizer = null;
     let pCameraEnhancer = null;
+    
+    DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211119103311.0/dist/"; 
+    DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
+
     document.getElementById('recognizeLabel').onclick = async () => {
         try {
-            await DLR.LabelRecognizer.loadWasm();
 
             let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
             let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({

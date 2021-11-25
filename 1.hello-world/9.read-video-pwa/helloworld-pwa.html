@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in a PWA application.">
     <meta name="keywords" content="recognize label from camera in PWA">
     <title>Dynamsoft Label Recognizer PWA Sample - Hello World (Decoding via Camera)</title>
@@ -20,6 +21,10 @@
         let pRecognizer = null;
         let pCameraEnhancer = null;
         let latestResult = null;
+
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/";
+        Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
+
         document.getElementById('recognizeLabel').onclick = async function() {
             Notification.requestPermission().then((result) => {
                 if (result === 'granted') {
@@ -27,12 +32,12 @@
                 }
             });
             try {
-                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
-                let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({
+                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+                let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
                     runtimeSettings: "video-letter"
                 }));
 
-                await cameraEnhancer.setUIElement(DLR.LabelRecognizer.defaultUIElementURL);
+                await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                 recognizer.cameraEnhancer = cameraEnhancer;
 
                 await recognizer.startScanning(true);
@@ -56,8 +61,8 @@
 
         function startNotificationLoop() {
             if (latestResult != null) {
-                const title = "New Barcode Found!";
-                const notifBody = `Barcode Text: ${latestResult}.`;
+                const title = "New Label Found!";
+                const notifBody = `Label Text: ${latestResult}.`;
                 const options = {
                     body: notifBody,
                 };

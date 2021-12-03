@@ -1,1 +1,0 @@
-# label-recognizer-javascript-samples

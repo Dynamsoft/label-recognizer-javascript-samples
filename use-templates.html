@@ -9,7 +9,7 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>use-templates</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211201224443.0/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -28,30 +28,31 @@
     <div id="div-video-container" style="margin-top: 50px;height: 700px;">
     </div>
     <script>
+        let flag = 0;
         let pRecognizer = null;
         let pCameraEnhancer = null;
         let cameraEnhancer = null;
         let recognizer = null;
 
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211201224443.0/dist/"; 
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
 
-        Dynamsoft.DLR.LabelRecognizer.initLicense("DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20vIiwiaGFuZHNoYWtlQ29kZSI6IjIwMDAwMS1zY2FuY291bnQifQ==");
+        Dynamsoft.DLR.LabelRecognizer.initLicense("Product-Keys");
 
         document.getElementById('select-value').onchange = async function() {
-            if(recognizer != null) {
-                let select = document.getElementById('select-value');
+            if(cameraEnhancer != null && cameraEnhancer.isOpen()) {
                 recognizer.stopScanning(true);
-                recognizer.updateRuntimeSettings(select.value);
-                await recognizer.startScanning(true);
+                recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
+                recognizer.startScanning(true);
             }
         };
 
         document.getElementById('btn-open-recognize').onclick = async function() {
-            if(pCameraEnhancer === null) {
+            if(cameraEnhancer == null || !cameraEnhancer.isOpen()) {
                 try {
-                    let select = document.getElementById('select-value');
 
+                    let select = document.getElementById('select-value');
+                    
                     cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
                     
                     recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
@@ -76,6 +77,7 @@
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
+
                 } catch (ex) {
                     alert(ex.message);
                     throw ex;

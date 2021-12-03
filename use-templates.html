@@ -9,7 +9,7 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>use-templates</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211203111336.0/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
         <option value="video-passportMRZ">passportMRZ</option>
         <option value="Video-VIN">VIN</option>
         <option value="video-VIN_NA">VIN_NA</option>
-        <option value="Video-visaMRZ_A">visaMRZ_A</option>
+        <option value="video-visaMRZ_A">visaMRZ_A</option>
     </select>
     <button id="btn-open-recognize">Open Label Recognize</button>
     <div id="div-video-container" style="margin-top: 50px;height: 700px;">
@@ -30,39 +30,39 @@
     <script>
         let pRecognizer = null;
         let pCameraEnhancer = null;
-        let cameraEnhancer = null;
         let recognizer = null;
 
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/"; 
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211203111336.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
 
-        Dynamsoft.DLR.LabelRecognizer.initLicense("Product-Keys");
+        Dynamsoft.DLR.LabelRecognizer.initLicense("DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20vIiwiaGFuZHNoYWtlQ29kZSI6IjIwMDAwMS1zY2FuY291bnQifQ==");
 
         document.getElementById('select-value').onchange = async function() {
-            if(cameraEnhancer != null && cameraEnhancer.isOpen()) {
-                recognizer.stopScanning(true);
-                recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
-                recognizer.startScanning(true);
+            if(recognizer != null && recognizer.cameraEnhancer != null && recognizer.cameraEnhancer.isOpen()) {
+                await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
             }
         };
 
         document.getElementById('btn-open-recognize').onclick = async function() {
-            if(cameraEnhancer == null || !cameraEnhancer.isOpen()) {
+            if(recognizer == null || !recognizer.cameraEnhancer.isOpen()) {
                 try {
+                    if(recognizer == null) {
+                        let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+                        
+                        recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
+                            runtimeSettings: document.getElementById('select-value').value
+                        }));
 
-                    let select = document.getElementById('select-value');
-                    
-                    cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
-                    
-                    recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                        runtimeSettings: select.value
-                    }));
+                        await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
+                        document.getElementById('div-video-container').innerHTML = "";
+                        document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
+                        recognizer.cameraEnhancer = cameraEnhancer;
 
-                    await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
-                    await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
-                    recognizer.cameraEnhancer = cameraEnhancer;
-
-                    await recognizer.startScanning(true);
+                        await recognizer.startScanning(true);
+                    }else {
+                        await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
+                        await recognizer.startScanning(true);
+                    }        
                     
                     recognizer.onFrameRead = async results => {
                         for (let result of results) {

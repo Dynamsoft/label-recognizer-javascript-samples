@@ -31,6 +31,7 @@
         let pRecognizer = null;
         let pCameraEnhancer = null;
         let recognizer = null;
+        let promiseDlrReady;
 
         Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211203111336.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
@@ -43,46 +44,49 @@
             }
         };
 
-        document.getElementById('btn-open-recognize').onclick = async function() {
-            if(recognizer == null || !recognizer.cameraEnhancer.isOpen()) {
-                try {
-                    if(recognizer == null) {
+        document.getElementById('btn-open-recognize').addEventListener('click', async function (){
+            try{
+                if(!promiseDlrReady) {
+                    promiseDlrReady = new Promise(async (resolve, reject) => {
                         let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
-                        
+                            
                         recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
                             runtimeSettings: document.getElementById('select-value').value
                         }));
 
                         await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
-                        document.getElementById('div-video-container').innerHTML = "";
                         document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
                         recognizer.cameraEnhancer = cameraEnhancer;
 
-                        await recognizer.startScanning(true);
-                    }else {
-                        await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
-                        await recognizer.startScanning(true);
-                    }        
-                    
-                    recognizer.onFrameRead = async results => {
-                        for (let result of results) {
-                            for (let lineResult of result.lineResults) {
-                                console.log(lineResult.text);
-                            }
+                        if(!recognizer.cameraEnhancer) {
+                            reject();
                         }
-                    };
-                    
-                    recognizer.onUniqueRead = (txt) => {
-                        alert(txt);
-                        console.log("Unique Code Found: " + txt);
-                    }
-
-                } catch (ex) {
-                    alert(ex.message);
-                    throw ex;
+                        resolve(recognizer);
+                    })
                 }
+                await promiseDlrReady;
+
+                await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
+                await recognizer.startScanning(true);
+            
+                recognizer.onFrameRead = async results => {
+                    for (let result of results) {
+                        for (let lineResult of result.lineResults) {
+                            console.log(lineResult.text);
+                        }
+                    }
+                };
+                    
+                recognizer.onUniqueRead = (txt) => {
+                    alert(txt);
+                    console.log("Unique Code Found: " + txt);
+                }
+            }catch(ex) {
+                alert(ex.message);
+                throw ex;
             }
-        };
+        })
+
     </script>
 </body>
 

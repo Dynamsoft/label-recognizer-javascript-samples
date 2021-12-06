@@ -31,9 +31,6 @@
         let recognizer = null;
         let promiseDlrReady;
 
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/"; 
-        Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
-
         document.getElementById('select-value').onchange = async function() {
             if(recognizer != null && recognizer.cameraEnhancer != null && recognizer.cameraEnhancer.isOpen()) {
                 await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);

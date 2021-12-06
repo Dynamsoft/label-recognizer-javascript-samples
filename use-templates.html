@@ -27,9 +27,7 @@
     <button id="btn-open-recognize">Open Label Recognize</button>
     <div id="div-video-container" style="margin-top: 50px;height: 700px;">
     </div>
-    <script>
-        let pRecognizer = null;
-        let pCameraEnhancer = null;
+    <script>       
         let recognizer = null;
         let promiseDlrReady;
 
@@ -45,26 +43,20 @@
         };
 
         document.getElementById('btn-open-recognize').addEventListener('click', async function (){
+            let pRecognizer = null;
+            let pCameraEnhancer = null;
             try{
-                if(!promiseDlrReady) {
-                    promiseDlrReady = new Promise(async (resolve, reject) => {
-                        let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+                await (promiseDlrReady = promiseDlrReady || (async() => {
+                    let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
                             
-                        recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                            runtimeSettings: document.getElementById('select-value').value
-                        }));
+                    recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
+                        runtimeSettings: document.getElementById('select-value').value
+                    }));
 
-                        await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
-                        document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
-                        recognizer.cameraEnhancer = cameraEnhancer;
-
-                        if(!recognizer.cameraEnhancer) {
-                            reject();
-                        }
-                        resolve(recognizer);
-                    })
-                }
-                await promiseDlrReady;
+                    await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
+                    document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
+                    recognizer.cameraEnhancer = cameraEnhancer;
+                })());
 
                 await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
                 await recognizer.startScanning(true);
@@ -81,6 +73,7 @@
                     alert(txt);
                     console.log("Unique Code Found: " + txt);
                 }
+
             }catch(ex) {
                 alert(ex.message);
                 throw ex;

@@ -9,7 +9,7 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>use-templates</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211203111336.0/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js" data-license="Product-Keys"></script>
 </head>
 
 <body>
@@ -31,10 +31,8 @@
         let recognizer = null;
         let promiseDlrReady;
 
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211203111336.0/dist/"; 
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/";
-
-        Dynamsoft.DLR.LabelRecognizer.initLicense("DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20vIiwiaGFuZHNoYWtlQ29kZSI6IjIwMDAwMS1zY2FuY291bnQifQ==");
 
         document.getElementById('select-value').onchange = async function() {
             if(recognizer != null && recognizer.cameraEnhancer != null && recognizer.cameraEnhancer.isOpen()) {

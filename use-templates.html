@@ -43,15 +43,13 @@
         };
 
         document.getElementById('btn-open-recognize').addEventListener('click', async function (){
-            let pRecognizer = null;
-            let pCameraEnhancer = null;
             try{
                 await (promiseDlrReady = promiseDlrReady || (async() => {
-                    let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
                             
-                    recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
+                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
                         runtimeSettings: document.getElementById('select-value').value
-                    }));
+                    });
 
                     await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                     document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());

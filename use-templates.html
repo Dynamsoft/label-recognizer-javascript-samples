@@ -8,13 +8,11 @@
     <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
     <meta name="keywords" content="camera based label recognizing">
     <title>use-templates</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js" data-license="Product-Keys"></script>
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <select id="select-value">
+    <select id="select-tpl">
         <option value="video-passportMRZ">passportMRZ</option>
         <option value="video-visaMRZ_A">visaMRZ_A</option>
         <option value="video-VIN_NA">VIN_NA</option>
@@ -25,47 +23,53 @@
         <option value="video-letter">letter</option>
     </select>
     <button id="btn-open-recognizer">Open Label Recognizer</button>
-    <div id="div-video-container" style="margin-top: 50px;height: 700px;">
-    </div>
+    <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js" data-license="Product-Keys"></script>
     <script>       
         let recognizer = null;
         let promiseDlrReady;
 
-        document.getElementById('select-value').onchange = async function() {
-            if(recognizer != null && recognizer.cameraEnhancer != null && recognizer.cameraEnhancer.isOpen()) {
-                await recognizer.updateRuntimeSettingsFromString(document.getElementById('select-value').value);
-            }
-        };
 
-        document.getElementById('btn-open-recognizer').addEventListener('click', async function (){
+        document.getElementById('select-tpl').addEventListener('change', async function() {
+            if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
+                await recognizer.updateRuntimeSettingsFromString(this.value);
+            }
+        });
+
+        document.getElementById('btn-open-recognizer').addEventListener('click', async ()=>{
             try{
+                const selectTpl = document.getElementById('select-tpl');
+
                 await (promiseDlrReady = promiseDlrReady || (async() => {
-                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
                             
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
-                        runtimeSettings: document.getElementById('select-value').value
+                        runtimeSettings: selectTpl.value
                     });
 
+                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
                     await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                     document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
                     recognizer.cameraEnhancer = cameraEnhancer;
-                })());
-
-                await recognizer.updateRuntimeSettingsFromString(document.getElementById('select-value').value);
-                await recognizer.startScanning(true);
-            
-                recognizer.onFrameRead = async results => {
-                    for (let result of results) {
-                        for (let lineResult of result.lineResults) {
-                            console.log(lineResult.text);
-                        }
-                    }
-                };
                     
-                recognizer.onUniqueRead = (txt) => {
-                    alert(txt);
-                    console.log("Unique Code Found: " + txt);
-                }
+                    recognizer.onFrameRead = async results => {
+                        for (let result of results) {
+                            for (let lineResult of result.lineResults) {
+                                console.log(lineResult.text);
+                            }
+                        }
+                    };
+                        
+                    recognizer.onUniqueRead = (txt) => {
+                        alert(txt);
+                        console.log("Unique Code Found: " + txt);
+                    }
+
+                })());
+            
+
+                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
+                await recognizer.startScanning(true);
 
             }catch(ex) {
                 alert(ex.message);

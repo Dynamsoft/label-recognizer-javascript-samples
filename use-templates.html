@@ -32,7 +32,8 @@
 
 
         document.getElementById('select-tpl').addEventListener('change', async function() {
-            if(recognizer) {
+            // check `isOpen` to lazy load settings
+            if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
                 await recognizer.updateRuntimeSettingsFromString(this.value);
             }
         });
@@ -41,6 +42,7 @@
             try{
                 const selectTpl = document.getElementById('select-tpl');
 
+                // create an instance only once
                 await (promiseDlrReady = promiseDlrReady || (async() => {
                             
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({

@@ -32,7 +32,8 @@
 
 
         document.getElementById('select-tpl').addEventListener('change', async function() {
-            // check `isOpen` to lazy load settings
+            // Loading settings is expensive, so we check `isOpen` to lazy load settings.
+            // Change to `if(recognizer)` if you want to load settings immediately.
             if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
                 await recognizer.updateRuntimeSettingsFromString(this.value);
             }

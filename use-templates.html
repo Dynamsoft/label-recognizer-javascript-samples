@@ -20,9 +20,9 @@
         <option value="video-numberUpperCase">numberUpperCase</option>
         <option value="video-letter">letter</option>
         <option value="video-passportMRZ">passportMRZ</option>
-        <option value="Video-VIN">VIN</option>
-        <option value="video-VIN_NA">VIN_NA</option>
         <option value="video-visaMRZ_A">visaMRZ_A</option>
+        <option value="video-VIN">VIN</option>
+        <option value="video-VIN_NA">VIN_NA</option>
     </select>
     <button id="btn-open-recognizer">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px;height: 700px;">
@@ -33,11 +33,11 @@
 
         document.getElementById('select-value').onchange = async function() {
             if(recognizer != null && recognizer.cameraEnhancer != null && recognizer.cameraEnhancer.isOpen()) {
-                await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
+                await recognizer.updateRuntimeSettingsFromString(document.getElementById('select-value').value);
             }
         };
 
-        document.getElementById('btn-open-recognize').addEventListener('click', async function (){
+        document.getElementById('btn-open-recognizer').addEventListener('click', async function (){
             try{
                 await (promiseDlrReady = promiseDlrReady || (async() => {
                     let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
@@ -51,7 +51,7 @@
                     recognizer.cameraEnhancer = cameraEnhancer;
                 })());
 
-                await recognizer.updateRuntimeSettings(document.getElementById('select-value').value);
+                await recognizer.updateRuntimeSettingsFromString(document.getElementById('select-value').value);
                 await recognizer.startScanning(true);
             
                 recognizer.onFrameRead = async results => {

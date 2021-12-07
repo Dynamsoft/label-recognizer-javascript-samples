@@ -32,7 +32,7 @@
 
 
         document.getElementById('select-tpl').addEventListener('change', async function() {
-            if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
+            if(recognizer) {
                 await recognizer.updateRuntimeSettingsFromString(this.value);
             }
         });

@@ -25,7 +25,7 @@
     <button id="btn-open-recognizer">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220216222512.0/dist/dlr.js" data-license="Product-Keys"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220218164734.0/dist/dlr.js" data-license="Product-Keys"></script>
     <script>       
         let recognizer = null;
         let promiseDlrReady;
@@ -35,7 +35,6 @@
             // Loading settings is expensive, so we check `isOpen` to lazy load settings.
             // Change to `if(recognizer)` if you want to load settings immediately.
             if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
-                console.log("Resources Loading...")
                 await recognizer.updateRuntimeSettingsFromString(this.value);
             }
         });
@@ -50,10 +49,12 @@
                     Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
                     let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
 
+
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
                         runtimeSettings: selectTpl.value
                     });
-                    recognizer.onResourcesLoadComplete = ()=>{console.log("Resources Loading Completed.")};
                     document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
                     recognizer.cameraEnhancer = cameraEnhancer;
                     
@@ -72,9 +73,8 @@
 
                 })());
             
-                console.log("Resources Loading...")
-                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
                 await recognizer.startScanning(true);
+                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
 
             }catch(ex) {
                 alert(ex.message);

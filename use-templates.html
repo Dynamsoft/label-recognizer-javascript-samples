@@ -14,7 +14,8 @@
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <select id="select-tpl">
         <option value="video-passportMRZ">passportMRZ</option>
-        <option value="video-visaMRZ_A">visaMRZ_A</option>
+        <option value="video-visaMRZ">visaMRZ</option>
+        <option value="video-MRZ">MRZ</option>
         <option value="video-VIN_NA">VIN_NA</option>
         <option value="video-VIN">VIN</option>
         <option value="video-numberLetter">numberLetter</option>
@@ -25,11 +26,10 @@
     <button id="btn-open-recognizer">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.0/dist/dlr.js" data-license="Product-Keys"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.1/dist/dlr.js" data-license="Product-Keys"></script>
     <script>       
         let recognizer = null;
         let promiseDlrReady;
-
 
         document.getElementById('select-tpl').addEventListener('change', async function() {
             // Loading settings is expensive, so we check `isOpen` to lazy load settings.
@@ -45,13 +45,17 @@
 
                 // create an instance only once
                 await (promiseDlrReady = promiseDlrReady || (async() => {
-                            
+
+                    Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
+                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+
+                    // callback of resources loading
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
+
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
                         runtimeSettings: selectTpl.value
                     });
-
-                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-                    await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                     document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
                     recognizer.cameraEnhancer = cameraEnhancer;
                     
@@ -67,12 +71,10 @@
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
-
                 })());
             
-
-                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
                 await recognizer.startScanning(true);
+                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
 
             }catch(ex) {
                 alert(ex.message);

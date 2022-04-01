@@ -8,7 +8,11 @@
     <meta name="description" content="Read Labels from images in no time with Dynamsoft Label Recognizer. With this online demo, you can choose a file to scan the label on them.">
     <meta name="keywords" content="recognize label from still images">
     <title>Dynamsoft Label Recognizer Sample - Recognize an Image</title>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/dlr.js"></script>
+=======
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/dlr.js"></script>
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </head>
 
 <body>
@@ -29,12 +33,20 @@
         // Dynamsoft.DLR.organizationID = "200000";
         // Dynamsoft.DLR.handshakeCode = "200000-dlr_js_samples";
 
+<<<<<<< HEAD
         Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/";
+=======
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/";
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 
         let pRecognizer = null;
         window.onload = async function() {
             try {
+<<<<<<< HEAD
                 Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+=======
+                Dynamsoft.DLR.LabelRecognizer.initLicense("t0068MgAAAKUZULwM1SshTkeSYEV5LPo0cnYXkSYBlpGkb0XcP1NTLvP+//NMWCbQfuyxGn1hbLfqF/bV7FuoMzNPJljQqW0=");
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
                 await Dynamsoft.DLR.LabelRecognizer.loadWasm();
             } catch (ex) {
                 alert(ex.message);
@@ -45,6 +57,7 @@
             try {
                 document.getElementById("imgToRecognize").hidden = true;
                 document.getElementById('lib-load').hidden = false;
+<<<<<<< HEAD
                 Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
                 Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
                     console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
@@ -52,6 +65,11 @@
                 Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                 let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
                     runtimeSettings: "mrz"
+=======
+
+                let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
+                    runtimeSettings: "passportMrz"
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
                 }));
 
                 document.getElementById('lib-load').hidden = true;

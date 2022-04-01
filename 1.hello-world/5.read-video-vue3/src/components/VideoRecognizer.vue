@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="container" ref="elRefs">
     <svg class="dce-bg-loading" viewBox="0 0 1792 1792"><path d="M1760 896q0 176-68.5 336t-184 275.5-275.5 184-336 68.5-336-68.5-275.5-184-184-275.5-68.5-336q0-213 97-398.5t265-305.5 374-151v228q-221 45-366.5 221t-145.5 406q0 130 51 248.5t136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5q0-230-145.5-406t-366.5-221v-228q206 31 374 151t265 305.5 97 398.5z"/></svg>
     <svg class="dce-bg-camera" viewBox="0 0 2048 1792"><path d="M1024 672q119 0 203.5 84.5t84.5 203.5-84.5 203.5-203.5 84.5-203.5-84.5-84.5-203.5 84.5-203.5 203.5-84.5zm704-416q106 0 181 75t75 181v896q0 106-75 181t-181 75h-1408q-106 0-181-75t-75-181v-896q0-106 75-181t181-75h224l51-136q19-49 69.5-84.5t103.5-35.5h512q53 0 103.5 35.5t69.5 84.5l51 136h224zm-704 1152q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>
@@ -25,6 +26,9 @@
         </svg>
     </div>
   </div>
+=======
+  <div id="labelRecognizerUI" ref="root"></div>
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </template>
 
 <script>
@@ -34,6 +38,7 @@ import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 
 export default {
   setup() {
+<<<<<<< HEAD
     const elRefs = ref(null);
     const pRecognizer = ref(null);
     const pCameraEnhancer = ref(null);
@@ -47,13 +52,33 @@ export default {
         };
         LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
         let recognizer = await (pRecognizer.value =  LabelRecognizer.createInstance({
+=======
+    const root = ref(null);
+    const pRecognizer = ref(null);
+    const pCameraEnhancer = ref(null);
+    const bDestroyed = ref(false);
+    onMounted(async () => {
+      try {
+        CameraEnhancer.defaultUIElementURL = LabelRecognizer.defaultUIElementURL;
+        let cameraEnhancer = await (pCameraEnhancer.value = pCameraEnhancer.value || CameraEnhancer.createInstance());
+        root.value.appendChild(cameraEnhancer.getUIElement());
+        let recognizer = await (pRecognizer.value = pRecognizer.value || LabelRecognizer.createInstance({
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
             runtimeSettings: "letter"
         }));
 
         recognizer.setImageSource(cameraEnhancer);
 
         await recognizer.startScanning(true);
+<<<<<<< HEAD
 
+=======
+        if(bDestroyed.value) {
+          await recognizer.value.destroyContext();
+          cameraEnhancer.value.dispose();
+          return;
+        }
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
         recognizer.onImageRead = (results) => {
           for (let result of results) {
             for (let lineResult of result.lineResults) {
@@ -65,15 +90,23 @@ export default {
             alert(txt);
             console.log("Unique Code Found: " + txt);
         }
+<<<<<<< HEAD
         recognizer.onMRZRead = (txt) => {
           alert(txt);
           console.log("MRZ Code Found: " + txt);
         }
+=======
+
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
       } catch (ex) {
         console.error(ex);
       }
     });
     onBeforeUnmount(async () => {
+<<<<<<< HEAD
+=======
+      bDestroyed.value = true;
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
       if (pRecognizer.value) {
         await (await pRecognizer.value).destroyContext();
         (await pCameraEnhancer.value).dispose();
@@ -81,7 +114,11 @@ export default {
       }
     });
     return {
+<<<<<<< HEAD
       elRefs,
+=======
+      root,
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
     };
   },
 };
@@ -93,6 +130,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+<<<<<<< HEAD
 @keyframes dce-rotate{from{transform:rotate(0turn);}to{transform:rotate(1turn);}}
 @keyframes dce-scanlight{from{top:0;}to{top:97%;}}
 .container{width:100%;height:100%;min-width:100px;min-height:100px;background:#eee;position:relative;}
@@ -108,4 +146,6 @@ export default {
 .dce-btn-close{position:absolute;right:0;top:0;}
 .dlr-msg-poweredby{position:absolute;left:50%;bottom:10%;transform:translateX(-50%);}
 .dlr-msg-poweredby svg{height:max(3vmin,17px);fill:#FFFFFF;}
+=======
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </style>

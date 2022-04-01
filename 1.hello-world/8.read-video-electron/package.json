@@ -9,8 +9,14 @@
     },
     "author": "tom@dynamsoft.com",
     "dependencies": {
+<<<<<<< HEAD
         "dynamsoft-camera-enhancer": "2.3.2",
         "electron": "14.0.1",
         "keillion-dynamsoft-label-recognizer": "0.20220401162747.0"
+=======
+        "dynamsoft-camera-enhancer": "2.0.3",
+        "electron": "14.0.1",
+        "keillion-dynamsoft-label-recognizer": "0.20220222222304.0"
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
     }
 }

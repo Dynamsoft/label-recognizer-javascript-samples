@@ -25,4 +25,10 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+<<<<<<< HEAD
+=======
+.applogo {
+  height: 5vmin;
+}
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </style>

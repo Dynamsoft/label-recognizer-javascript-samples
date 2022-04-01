@@ -6,18 +6,31 @@
     <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in an Electron Application.">
     <meta name="keywords" content="recognize label from camera in Electron">
     <title>Recognize labels from a video input in Electron!</title>
+<<<<<<< HEAD
     <link href="./style.css" rel="stylesheet">
+=======
+    <link href="style.css" rel="stylesheet">
+    <script src="./node_modules/keillion-dynamsoft-label-recognizer/dist/dlr.js"></script>
+    <script src="./node_modules/dynamsoft-camera-enhancer/dist/dce.js"></script>
+    <script src="action.js"></script>
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Hello World for Electron</h1>
     <button id='recognizeLabel'>Recognize Label via Camera</button>
     <div id="UIElement">
+<<<<<<< HEAD
         <div id="div-video-container" style="width: 100%; height: 100%;"></div>
     </div>
     <script src="./node_modules/dynamsoft-camera-enhancer/dist/dce.js"></script>
     <script src="./node_modules/keillion-dynamsoft-label-recognizer/dist/dlr.js"></script>
     <script src="./action.js"></script>
+=======
+        <div id="labelRecognizerUI"></div>
+    </div>
+    <input id="resultText" type="text" readonly="true">
+>>>>>>> c8f3f83addd49e8b8406aa000373de5582e8d441
 </body>
 
 </html>

@@ -1,0 +1,21 @@
+html,body {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+body {
+    text-align: center;
+}
+
+#labelRecognizerUI {
+    width: 100%;
+    height: 100%;
+}
+
+#UIElement {
+    margin: 2vmin auto;
+    text-align: center;
+    font-size: medium;
+    height: 40vh;
+    width: 80vw;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
+    <meta name="keywords" content="camera based label recognizing">
+    <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
+    <button id="btn-open-recognize">Open Label Recognize</button>
+    <div id="div-video-container" style="width: 100%; height: 100%;"></div>
+    <script type="module">
+        import { CameraEnhancer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.mjs';
+        import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220401162747.0/dist/dlr.mjs'; 
+
+        LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
+        CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
+
+        LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+        let pRecognizer = null;
+        let pCameraEnhancer = null;
+        document.getElementById('btn-open-recognize').addEventListener('click', async () => {
+            try {
+                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || CameraEnhancer.createInstance());
+                Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
+                Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                    console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
+                };
+                Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+                let recognizer = await (pRecognizer = pRecognizer || LabelRecognizer.createInstance({
+                    runtimeSettings: "letter"
+                }));
+
+                await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
+                recognizer.setImageSource(cameraEnhancer);
+
+                await recognizer.startScanning(true);
+
+                recognizer.onImageSource = async results => {
+                    for (let result of results) {
+                        for (let lineResult of result.lineResults){
+                            console.log(lineResult.text)
+                        }
+                    }
+                };
+                recognizer.onUniqueRead = (txt, result) => {
+                    alert(txt);
+                    console.log("Unique Code Found: " + result);
+                }
+                recognizer.onMRZRead = (txt) => {
+                    alert(txt);
+                    console.log("MRZ Code Found: " + txt);
+                }
+            } catch (ex) {
+                alert(ex.message);
+                throw ex;
+            }
+        });
+    </script>
+</body>
+
+</html>

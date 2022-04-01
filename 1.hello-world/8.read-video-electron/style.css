@@ -1,0 +1,13 @@
+html,body {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#UIElement {
+    margin: 2vmin auto;
+    text-align: center;
+    font-size: medium;
+    width: 100%;
+    height: 100%;
+}

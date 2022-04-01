@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
+    <meta name="keywords" content="camera based label recognizing">
+    <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/dlr.js"></script>
+</head>
+
+<body>
+    <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
+    <select id="select-value">
+        <option value="numberLetter">numberLetter</option>
+        <option value="number">number</option>
+        <option value="numberUpperCase">numberUpperCase</option>
+        <option value="letter">letter</option>
+        <option value="passportMRZ">passportMRZ</option>
+        <option value="VIN">VIN</option>
+        <option value="VIN_NA">VIN_NA</option>
+        <option value="visaMRZ_A">visaMRZ_A</option>
+    </select>
+    <button id="btn-open-recognize">Open Label Recognize</button>
+    <div id="div-video-container" style="margin-top: 50px;height: 700px;">
+    </div>
+    <script>
+        let pRecognizer = null;
+        let pCameraEnhancer = null;
+        let cameraEnhancer = null;
+        let recognizer = null;
+
+        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
+        Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
+
+        Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+
+        document.getElementById('select-value').onchange = async function() {
+            if(recognizer != null) {
+                let select = document.getElementById('select-value');
+                recognizer.stopScanning(true);
+                recognizer.updateRuntimeSettings(select.value);
+                await recognizer.startScanning(true);
+            }
+        };
+
+        document.getElementById('btn-open-recognize').onclick = async function() {
+            if(pCameraEnhancer === null) {
+                try {
+                    let select = document.getElementById('select-value');
+
+                    cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
+
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
+                    };
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+
+                    recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
+                        runtimeSettings: select.value
+                    }));
+
+                    await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
+                    await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
+                    recognizer.setImageSource(cameraEnhancer);
+
+                    await recognizer.startScanning(true);
+                    
+                    recognizer.onImageRead = async results => {
+                        for (let result of results) {
+                            for (let lineResult of result.lineResults) {
+                                console.log(lineResult.text);
+                            }
+                        }
+                    };
+                    
+                    recognizer.onUniqueRead = (txt) => {
+                        alert(txt);
+                        console.log("Unique Code Found: " + txt);
+                    }
+                    recognizer.onMRZRead = (txt) => {
+                        alert(txt);
+                        console.log("MRZ Code Found: " + txt);
+                    }
+                } catch (ex) {
+                    alert(ex.message);
+                    throw ex;
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

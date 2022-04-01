@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer">
+    <meta name="keywords" content="recognize label from camera, RequireJS">
+</head>
+
+<body>
+    <h1 style="font-size: 1.5em;">Hello World for RequireJS</h1>
+    <button id="recognizeLabel">show scanner</button>
+    <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"></script>
+    <script>
+        requirejs(['https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js'], function(
+            DLR, DCE
+        ) {
+
+            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20211123171208.0/dist/";
+            DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/"
+
+            DLR.LabelRecognizer.initLicense("t0068MgAAAKUZULwM1SshTkeSYEV5LPo0cnYXkSYBlpGkb0XcP1NTLvP+//NMWCbQfuyxGn1hbLfqF/bV7FuoMzNPJljQqW0=");
+
+            let pRecognizer = null;
+            let pCameraEnhancer = null;
+            document.getElementById('recognizeLabel').onclick = async function() {
+                try {
+                    let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
+                    let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({
+                        runtimeSettings: "video-letter"
+                    }));
+
+                    await cameraEnhancer.setUIElement(DLR.LabelRecognizer.defaultUIElementURL);
+                    recognizer.cameraEnhancer = cameraEnhancer;
+
+                    await recognizer.startScanning(true);
+
+                    recognizer.onFrameRead = results => {
+                        for (let result of results) {
+                            for (let lineResult of result.lineResults) {
+                                console.log(lineResult.text);
+                            }
+                        }
+                    };
+                    recognizer.onUniqueRead = (txt) => {
+                        alert(txt);
+                        console.log("Unique Code Found: " + txt);
+                    }
+                } catch (ex) {
+                    alert(ex.message);
+                    throw ex;
+                }
+            };
+        })
+    </script>
+</body>
+
+</html>

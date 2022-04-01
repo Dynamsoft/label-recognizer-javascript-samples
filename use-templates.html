@@ -26,7 +26,7 @@
     <button id="btn-open-recognizer">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.2/dist/dlr.js" data-license="Product-Keys"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.1/dist/dlr.js" data-license="Product-Keys"></script>
     <script>       
         let recognizer = null;
         let promiseDlrReady;
@@ -51,9 +51,6 @@
 
                     // callback of resources loading
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
-                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
-                    };
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
 
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
@@ -74,12 +71,6 @@
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
-
-                    recognizer.onMRZRead = (txt) => {
-                        alert(txt);
-                        console.log("MRZ Code Found: " + txt);
-                    }
-
                 })());
             
                 await recognizer.startScanning(true);

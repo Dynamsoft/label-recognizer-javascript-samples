@@ -44,7 +44,7 @@ export default {
         };
         LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
         let recognizer = await (pRecognizer.value =  LabelRecognizer.createInstance({
-            runtimeSettings: "letter"
+            runtimeSettings: "numberletter"
         }));
 
         recognizer.setImageSource(cameraEnhancer);

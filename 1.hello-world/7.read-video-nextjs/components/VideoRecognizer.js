@@ -19,7 +19,7 @@ class VideoRecognizer extends React.Component {
             };
             LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
             let recognizer = await (this.pRecognizer = LabelRecognizer.createInstance({
-                runtimeSettings: "letter"
+                runtimeSettings: "numberletter"
             }));
 
             recognizer.setImageSource(cameraEnhancer);

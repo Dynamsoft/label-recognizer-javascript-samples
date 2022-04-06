@@ -16,7 +16,7 @@ document.getElementById('recognizeLabel').onclick = async () => {
         };
         Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
         let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-            runtimeSettings: "letter"
+            runtimeSettings: "numberletter"
         }));
         
         await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());

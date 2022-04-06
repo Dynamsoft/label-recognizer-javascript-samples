@@ -12,7 +12,7 @@ export default {
     const pRecognizer = ref(null);
 
     onMounted(async ()=>{
-      await (pRecognizer.value = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
+      await (pRecognizer.value = LabelRecognizer.createInstance({runtimeSettings: "numberletter"}));
     })
 
     const decodeImg = async (e) => {

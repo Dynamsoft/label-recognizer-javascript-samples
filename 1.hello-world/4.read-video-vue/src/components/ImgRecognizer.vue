@@ -12,7 +12,7 @@ export default {
     }
   },
   async mounted() {
-    await (this.pRecognizer = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
+    await (this.pRecognizer = LabelRecognizer.createInstance({runtimeSettings: "numberletter"}));
   },
   methods: {
     async decodeImg(e) {

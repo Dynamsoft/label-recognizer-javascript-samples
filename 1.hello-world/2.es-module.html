@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <button id="btn-open-recognize">Open Label Recognize</button>
+    <button id="btn-open-recognize">Open Label Recognizer</button>
     <div id="div-video-container" style="width: 100%; height: 100%;"></div>
     <script type="module">
         import { CameraEnhancer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.mjs';
@@ -38,7 +38,7 @@
                 };
                 LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                 let recognizer = await (pRecognizer = pRecognizer || LabelRecognizer.createInstance({
-                    runtimeSettings: "letter"
+                    runtimeSettings: "numberletter"
                 }));
 
                 await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());

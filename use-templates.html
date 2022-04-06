@@ -13,20 +13,20 @@
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <select id="select-tpl">
-        <option value="video-passportMRZ">passportMRZ</option>
-        <option value="video-visaMRZ">visaMRZ</option>
-        <option value="video-MRZ">MRZ</option>
-        <option value="video-VIN_NA">VIN_NA</option>
-        <option value="video-VIN">VIN</option>
-        <option value="video-numberLetter">numberLetter</option>
-        <option value="video-number">number</option>
-        <option value="video-numberUpperCase">numberUpperCase</option>
-        <option value="video-letter">letter</option>
+        <option value="numberLetter">numberLetter</option>
+        <option value="passportMRZ">passportMRZ</option>
+        <option value="visaMRZ">visaMRZ</option>
+        <option value="MRZ">MRZ</option>
+        <option value="VIN_NA">VIN_NA</option>
+        <option value="VIN">VIN</option>
+        <option value="number">number</option>
+        <option value="numberUpperCase">numberUpperCase</option>
+        <option value="letter">letter</option>
     </select>
     <button id="btn-open-recognizer">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.1/dist/dlr.js" data-license="Product-Keys"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220402180045.0/dist/dlr.js" data-license="DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9"></script>
     <script>       
         let recognizer = null;
         let promiseDlrReady;
@@ -51,25 +51,31 @@
 
                     // callback of resources loading
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
+                    };
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
 
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
                         runtimeSettings: selectTpl.value
                     });
                     document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
-                    recognizer.cameraEnhancer = cameraEnhancer;
+                    recognizer.setImageSource(cameraEnhancer);
                     
-                    recognizer.onFrameRead = async results => {
+                    recognizer.onImageRead = async results => {
                         for (let result of results) {
                             for (let lineResult of result.lineResults) {
                                 console.log(lineResult.text);
                             }
                         }
                     };
-                        
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
+                    }
+                    recognizer.onMRZRead = (txt) => {
+                        alert(txt);
+                        console.log("MRZ Code Found: " + txt);
                     }
                 })());
             

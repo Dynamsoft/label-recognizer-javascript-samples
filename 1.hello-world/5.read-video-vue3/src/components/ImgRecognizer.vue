@@ -9,16 +9,16 @@ export default {
   name: 'ImgRecognizer',
   setup() {
     const iptRef = ref(null);
-    const pReader = ref(null);
-    const reader = ref(null);
+    const pRecognizer = ref(null);
 
     onMounted(async ()=>{
-      reader.value = await (pReader.value = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
+      await (pRecognizer.value = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
     })
 
     const decodeImg = async (e) => {
       try {
-        let results = await reader.value.recognize(e.target.files[0]);
+        const recognizer = await pRecognizer.value;
+        let results = await recognizer.recognize(e.target.files[0]);
         for(let result of results){
           for(let line of result.lineResults) {
             alert(line.text);
@@ -32,8 +32,8 @@ export default {
     }
 
     onBeforeUnmount(async ()=>{
-      if(pReader.value) {
-        (await pReader.value).destroyContext();
+      if(pRecognizer.value) {
+        (await pRecognizer.value).destroyContext();
         console.log('ImgRecognizer Component Unmount');
       }
     })

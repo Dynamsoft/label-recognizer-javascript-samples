@@ -11,9 +11,6 @@
         <select class="dce-sel-resolution"></select>
         <select class="dlr-sel-minletter"></select>
     </div>
-    <button class="dce-btn-close">
-        <svg width="16" height="16" viewBox="0 0 1792 1792"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
-    </button>
     <div class="dlr-msg-poweredby">
         <svg viewBox="0 0 94 17">
             <g>
@@ -102,7 +99,6 @@ export default {
 .sel-container .dce-sel-camera{display:block;}
 .sel-container .dce-sel-resolution{display:block;margin-top:5px;}
 .sel-container .dlr-sel-minletter{display:block;margin-top:5px;}
-.dce-btn-close{position:absolute;right:0;top:0;}
 .dlr-msg-poweredby{position:absolute;left:50%;bottom:10%;transform:translateX(-50%);}
 .dlr-msg-poweredby svg{height:max(3vmin,17px);fill:#FFFFFF;}
 </style>

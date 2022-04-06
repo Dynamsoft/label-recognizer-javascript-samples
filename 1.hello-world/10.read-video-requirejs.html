@@ -27,17 +27,18 @@
             DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/"
 
             DLR.LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
-
+            DCE.CameraEnhancer.defaultUIElementURL = DLR.LabelRecognizer.defaultUIElementURL;
+            
             let pRecognizer = null;
             let pCameraEnhancer = null;
             document.getElementById('recognizeLabel').onclick = async function() {
                 try {
                     let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || DCE.CameraEnhancer.createInstance());
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                    DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
+                    DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
                         console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
                     };
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+                    DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                     let recognizer = await (pRecognizer = pRecognizer || DLR.LabelRecognizer.createInstance({
                         runtimeSettings: "letter"
                     }));

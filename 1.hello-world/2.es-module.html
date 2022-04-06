@@ -24,6 +24,7 @@
 
         LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
         CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
+        CameraEnhancer.defaultUIElementURL = LabelRecognizer.defaultUIElementURL;
 
         LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
         let pRecognizer = null;
@@ -31,11 +32,11 @@
         document.getElementById('btn-open-recognize').addEventListener('click', async () => {
             try {
                 let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || CameraEnhancer.createInstance());
-                Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-                Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
+                LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
                     console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
                 };
-                Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+                LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                 let recognizer = await (pRecognizer = pRecognizer || LabelRecognizer.createInstance({
                     runtimeSettings: "letter"
                 }));

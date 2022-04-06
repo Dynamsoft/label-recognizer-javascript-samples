@@ -8,17 +8,17 @@ export default {
   name: 'ImgDecode',
   data() {
     return {
-      pReader: null,
-      reader: null
+      pRecognizer: null,
     }
   },
   async mounted() {
-    this.reader = await (this.pReader = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
+    await (this.pRecognizer = LabelRecognizer.createInstance({runtimeSettings: "letter"}));
   },
   methods: {
     async decodeImg(e) {
       try {
-        let results = await this.reader.recognize(e.target.files[0]);
+        const recognizer = await this.pRecognizer;
+        let results = await recognizer.recognize(e.target.files[0]);
         for(let result of results){
           for(let line of result.lineResults) {
             alert(line.text);
@@ -32,8 +32,8 @@ export default {
     }
   },
   async beforeDestroy() {
-    if(this.pReader) {
-      (await this.pReader).destroyContext();
+    if(this.pRecognizer) {
+      (await this.pRecognizer).destroyContext();
       console.log('ImgRecognizer Component Unmount');
     }
   },

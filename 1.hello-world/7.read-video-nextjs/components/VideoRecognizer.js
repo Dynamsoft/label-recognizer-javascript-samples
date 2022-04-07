@@ -27,7 +27,7 @@ class VideoRecognizer extends React.Component {
 
             await recognizer.startScanning(true);
 
-            recognizer.onFrameRead = results => {
+            recognizer.onImageRead = results => {
                 for (let result of results) {
                     for (let lineResult of result.lineResults) {
                         console.log(lineResult.text);
@@ -38,12 +38,7 @@ class VideoRecognizer extends React.Component {
                 alert(txt);
                 console.log("Unique Code Found: " + txt);
             }
-            recognizer.onMRZRead = (txt) => {
-                alert(txt);
-                console.log("MRZ Code Found: " + txt);
-            }
         } catch (ex) {
-            this.props.appendMessage({ msg: ex.message, type: "error" });
             console.error(ex);
         }
     }

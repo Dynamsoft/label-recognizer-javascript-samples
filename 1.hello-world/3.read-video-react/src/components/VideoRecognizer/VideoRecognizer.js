@@ -13,7 +13,6 @@ class VideoRecognizer extends React.Component {
     async componentDidMount() {
         try {
             let cameraEnhancer = await (this.pCameraEnhancer = CameraEnhancer.createInstance());
-            window.dce = cameraEnhancer;
             cameraEnhancer.setUIElement(this.elRef.current);
             LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
             LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
@@ -40,11 +39,6 @@ class VideoRecognizer extends React.Component {
             recognizer.onUniqueRead = (txt) => {
                 alert(txt);
                 console.log("Unique Code Found: " + txt);
-            }
-
-            recognizer.onMRZRead = (txt) => {
-                alert(txt);
-                console.log("MRZ Code Found: " + txt);
             }
         } catch (ex) {
             console.error(ex);

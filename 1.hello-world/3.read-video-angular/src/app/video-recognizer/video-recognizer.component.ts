@@ -42,11 +42,6 @@ export class VideoRecognizerComponent implements OnInit {
           alert(txt);
           console.log("Unique Code Found: " + txt);
       }
-
-      recognizer.onMRZRead = (txt) => {
-          alert(txt);
-          console.log("MRZ Code Found: " + txt);
-      }
   } catch (ex) {
       console.error(ex);
   }

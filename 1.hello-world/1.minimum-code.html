@@ -14,17 +14,6 @@
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <select id="select-value">
-        <option value="numberLetter">numberLetter</option>
-        <option value="number">number</option>
-        <option value="numberUpperCase">numberUpperCase</option>
-        <option value="letter">letter</option>
-        <option value="passportMRZ">passportMRZ</option>
-        <option value="visamrz">visaMRZ</option>
-        <option value="mrz">MRZ</option>
-        <option value="vin">VIN</option>
-        <option value="vin_na">VIN_NA</option>
-    </select>
     <button id="btn-open-recognize">Open Label Recognizer</button>
     <div id="div-video-container" style="margin-top: 50px;height: 700px;">
     </div>
@@ -37,18 +26,16 @@
         Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
         Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
 
+        /** LICENSE ALERT - README 
+         * To use the library, you need to first specify a license key using the API "license" as shown below.
+         */
         Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJtYWluU2VydmVyVVJMIjoiaHR0cHM6Ly90ZXN0ZGxzLmR5bmFtc29mdC5jb20iLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
-
-        document.getElementById('select-value').onchange = async function() {
-            if(recognizer != null) {
-                let select = document.getElementById('select-value');
-
-                console.log(select.value);
-                await recognizer.stopScanning(true);
-                await recognizer.updateRuntimeSettingsFromString(select.value);
-                await recognizer.startScanning(true);
-            }
-        };
+        /** 
+         * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
+         * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
+         * For more information, see https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest#specify-the-license or contact support@dynamsoft.com.
+         * LICENSE ALERT - THE END 
+         */
 
         document.getElementById('btn-open-recognize').onclick = async function() {
             if(pCameraEnhancer === null) {
@@ -57,14 +44,8 @@
 
                     cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
 
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
-                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
-                    };
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
-
                     recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                        runtimeSettings: select.value
+                        runtimeSettings: 'numberletter'
                     }));
 
                     await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
@@ -85,10 +66,6 @@
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
-                    }
-                    recognizer.onMRZRead = (txt) => {
-                        alert(txt);
-                        console.log("MRZ Code Found: " + txt);
                     }
                 } catch (ex) {
                     alert(ex.message);

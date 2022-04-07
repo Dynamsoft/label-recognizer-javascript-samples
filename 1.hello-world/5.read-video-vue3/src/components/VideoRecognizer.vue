@@ -4,7 +4,7 @@
     <svg class="dce-bg-camera" viewBox="0 0 2048 1792"><path d="M1024 672q119 0 203.5 84.5t84.5 203.5-84.5 203.5-203.5 84.5-203.5-84.5-84.5-203.5 84.5-203.5 203.5-84.5zm704-416q106 0 181 75t75 181v896q0 106-75 181t-181 75h-1408q-106 0-181-75t-75-181v-896q0-106 75-181t181-75h224l51-136q19-49 69.5-84.5t103.5-35.5h512q53 0 103.5 35.5t69.5 84.5l51 136h224zm-704 1152q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>
     <div class="dce-video-container"></div>
     <div class="dce-scanarea">
-        <div class="dce-scanlight"></div>
+        <div class="dce-scanlight" style="display:none;"></div>
     </div>
     <div class="sel-container">
         <select class="dce-sel-camera"></select>
@@ -48,6 +48,7 @@ export default {
         }));
 
         recognizer.setImageSource(cameraEnhancer);
+        cameraEnhancer.ifShowScanRegionLaser = true;
 
         await recognizer.startScanning(true);
 
@@ -97,7 +98,7 @@ export default {
 .dce-bg-camera{display:none;width:40%;height:40%;position:absolute;margin:auto;left:0;top:0;right:0;bottom:0;fill:#aaa;}
 .dce-video-container{position:absolute;left:0;top:0;width:100%;height:100%;}
 .dce-scanarea{position:absolute;left:0;top:0;width:100%;height:100%;}
-.dce-scanarea .dce-scanlight{display:none;position:absolute;width:100%;height:3%;border-radius:50%;box-shadow:0px 0px 2vw 1px #00e5ff;background:#fff;animation:3s infinite dce-scanlight;user-select:none;}
+.dce-scanarea .dce-scanlight{position:absolute;width:100%;height:3%;border-radius:50%;box-shadow:0px 0px 2vw 1px #00e5ff;background:#fff;animation:3s infinite dce-scanlight;user-select:none;}
 .sel-container{position: absolute;left: 0;top: 0;}
 .sel-container .dce-sel-camera{display:block;}
 .sel-container .dce-sel-resolution{display:block;margin-top:5px;}

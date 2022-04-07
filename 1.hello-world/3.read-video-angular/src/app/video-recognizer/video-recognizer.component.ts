@@ -26,6 +26,7 @@ export class VideoRecognizerComponent implements OnInit {
       }))
 
       recognizer.setImageSource(cameraEnhancer);
+      cameraEnhancer.ifShowScanRegionLaser = true;
 
       await recognizer.startScanning(true);
 

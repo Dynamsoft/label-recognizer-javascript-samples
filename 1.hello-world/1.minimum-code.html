@@ -42,8 +42,10 @@
         document.getElementById('select-value').onchange = async function() {
             if(recognizer != null) {
                 let select = document.getElementById('select-value');
-                recognizer.stopScanning(true);
-                recognizer.updateRuntimeSettings(select.value);
+
+                console.log(select.value);
+                await recognizer.stopScanning(true);
+                await recognizer.updateRuntimeSettingsFromString(select.value);
                 await recognizer.startScanning(true);
             }
         };
@@ -68,6 +70,7 @@
                     await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
                     await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
                     recognizer.setImageSource(cameraEnhancer);
+                    cameraEnhancer.ifShowScanRegionLaser = true;
 
                     await recognizer.startScanning(true);
                     

@@ -19,7 +19,6 @@
         "@angular/platform-browser": "~11.2.5",
         "@angular/platform-browser-dynamic": "~11.2.5",
         "@angular/router": "~11.2.5",
-        "dynamsoft-javascript-barcode": "8.8.7",
         "dynamsoft-camera-enhancer": "2.3.2",
         "keillion-dynamsoft-label-recognizer": "0.20220331152831.0",
         "rxjs": "~6.6.0",

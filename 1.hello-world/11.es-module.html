@@ -7,24 +7,17 @@
     <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
 </head>
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <button id="btn-open-recognize">Open Label Recognizer</button>
-    <div id="div-video-container" style="width: 100%; height: 100%;"></div>
+    <div id="div-ui-container" style="margin-top: 50px;width: 100%; height: 75vh;"></div>
     <script type="module">
         import { CameraEnhancer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.mjs';
-        import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220401162747.0/dist/dlr.mjs'; 
+        import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220408111535.0/dist/dlr.mjs'; 
 
-        LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
+        LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220408111535.0/dist/"; 
         CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
-        CameraEnhancer.defaultUIElementURL = LabelRecognizer.defaultUIElementURL;
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -37,36 +30,39 @@
          * LICENSE ALERT - THE END 
          */
         
-        let pRecognizer = null;
-        let pCameraEnhancer = null;
+        let recognizer = null;
+        let cameraEnhancer = null;
+        let promiseDLRReady;
         document.getElementById('btn-open-recognize').addEventListener('click', async () => {
             try {
-                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || CameraEnhancer.createInstance());
-                LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-                LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
-                    console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
-                };
-                LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
-                let recognizer = await (pRecognizer = pRecognizer || LabelRecognizer.createInstance({
-                    runtimeSettings: "numberletter"
-                }));
+                await (promiseDLRReady = promiseDLRReady || (async() => {
+                    CameraEnhancer.defaultUIElementURL = LabelRecognizer.defaultUIElementURL;
+                    cameraEnhancer = await CameraEnhancer.createInstance();
+                    LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
+                    LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
+                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
+                    };
+                    LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+                    recognizer = await LabelRecognizer.createInstance();
+                    recognizer.setImageSource(cameraEnhancer);
+                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
 
-                await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
-                recognizer.setImageSource(cameraEnhancer);
+                    await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 
-                await recognizer.startScanning(true);
-
-                recognizer.onImageRead = async results => {
-                    for (let result of results) {
-                        for (let lineResult of result.lineResults){
-                            console.log(lineResult.text)
+                    recognizer.onImageRead = async results => {
+                        for (let result of results) {
+                            for (let lineResult of result.lineResults){
+                                console.log(lineResult.text)
+                            }
                         }
+                    };
+                    recognizer.onUniqueRead = (txt, result) => {
+                        alert(txt);
+                        console.log("Unique Code Found: " + result);
                     }
-                };
-                recognizer.onUniqueRead = (txt, result) => {
-                    alert(txt);
-                    console.log("Unique Code Found: " + result);
-                }
+                })());
+                await recognizer.startScanning(true);
+                cameraEnhancer.ifShowScanRegionLaser = true;
             } catch (ex) {
                 alert(ex.message);
                 throw ex;

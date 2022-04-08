@@ -43,11 +43,10 @@ export default {
           console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
         };
         LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
-        let recognizer = await (pRecognizer.value =  LabelRecognizer.createInstance({
-            runtimeSettings: "numberletter"
-        }));
+        let recognizer = await (pRecognizer.value =  LabelRecognizer.createInstance());
 
         recognizer.setImageSource(cameraEnhancer);
+        await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
         cameraEnhancer.ifShowScanRegionLaser = true;
 
         await recognizer.startScanning(true);

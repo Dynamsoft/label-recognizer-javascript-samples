@@ -2,8 +2,9 @@
 const cacheName = 'helloworld-pwa';
 const appShellFiles = [
     './helloworld-pwa.html',
-    './dbr-big.png',
-    './helloworld-pwa.webmanifest',
+    './dlr128.png',
+    './dlr256.png',
+    './helloworld-pwa.json',
 ];
 
 // Installing Service Worker

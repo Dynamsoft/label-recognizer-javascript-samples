@@ -9,21 +9,19 @@
     <meta name="keywords" content="recognize label from camera in PWA">
     <title>Dynamsoft Label Recognizer PWA Sample - Hello World (Decoding via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220401154537.0/dist/dlr.js"></script>
-    <link rel="manifest" href="./helloworld-pwa.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220408111535.0/dist/dlr.js"></script>
+    <link rel="manifest" href="./helloworld-pwa.json">
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Hello World for PWA</h1>
     <button id='recognizeLabel'>Open Label Recognizer</button>
+    <div id="div-ui-container" style="margin-top: 50px;height: 700px;"></div>
     <script>
-
-        let pRecognizer = null;
-        let pCameraEnhancer = null;
+        let promiseDLRReady = null;
+        let recognizer = null;
+        let cameraEnhancer = null;
         let latestResult = null;
-
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220401154537.0/dist/";
-        Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -43,27 +41,34 @@
                 }
             });
             try {
-                let cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
-                let recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                    runtimeSettings: "numberletter"
-                }));
+                await (promiseDLRReady = promiseDLRReady || (async() => {
+                    
+                    Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
+                    
+                    cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
 
-                await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
-                recognizer.setImageSource(cameraEnhancer);
+                    recognizer.setImageSource(cameraEnhancer);
+                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+    
+                    await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
+                    
+                    recognizer.onImageRead = async results => {
+                        for (let result of results) {
+                            for (let lineResult of result.lineResults) {
+                                console.log(lineResult.text);
+                            }
+                        }
+                    };
+                    
+                    recognizer.onUniqueRead = (txt) => {
+                        alert(txt);
+                        console.log("Unique Code Found: " + txt);
+                    }
+                })());
 
                 await recognizer.startScanning(true);
-
-                recognizer.onImageRead = results => {
-                    for (let result of results) {
-                        for (let lineResult of result.lineResults) {
-                            console.log(lineResult.text);
-                        }
-                    }
-                };
-                recognizer.onUniqueRead = (txt) => {
-                    alert(txt);
-                    console.log("Unique Code Found: " + txt);
-                }
+                cameraEnhancer.ifShowScanRegionLaser = true;
             } catch (ex) {
                 alert(ex.message);
                 throw ex;

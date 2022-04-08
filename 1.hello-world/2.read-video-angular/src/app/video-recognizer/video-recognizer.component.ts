@@ -21,11 +21,10 @@ export class VideoRecognizerComponent implements OnInit {
           console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
       };
       LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
-      let recognizer = await (this.pRecognizer = LabelRecognizer.createInstance({
-          runtimeSettings: "numberletter"
-      }))
+      let recognizer = await (this.pRecognizer = LabelRecognizer.createInstance());
 
       recognizer.setImageSource(cameraEnhancer);
+      await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
       cameraEnhancer.ifShowScanRegionLaser = true;
 
       await recognizer.startScanning(true);

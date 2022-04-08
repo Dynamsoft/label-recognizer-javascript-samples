@@ -9,22 +9,18 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220408111535.0/dist/dlr.js"></script>
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <button id="btn-open-recognize">Open Label Recognizer</button>
-    <div id="div-video-container" style="margin-top: 50px;height: 700px;">
+    <div id="div-ui-container" style="margin-top: 50px;height: 700px;">
     </div>
     <script>
-        let pRecognizer = null;
-        let pCameraEnhancer = null;
-        let cameraEnhancer = null;
         let recognizer = null;
-
-        Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220331152831.0/dist/"; 
-        Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
+        let cameraEnhancer = null;
+        let promiseDLRReady;
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -38,22 +34,17 @@
          */
 
         document.getElementById('btn-open-recognize').onclick = async function() {
-            if(pCameraEnhancer === null) {
-                try {
-                    let select = document.getElementById('select-value');
+            try {
+                await (promiseDLRReady = promiseDLRReady || (async() => {
 
-                    cameraEnhancer = await (pCameraEnhancer = pCameraEnhancer || Dynamsoft.DCE.CameraEnhancer.createInstance());
-
-                    recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance({
-                        runtimeSettings: 'numberletter'
-                    }));
-
-                    await cameraEnhancer.setUIElement(Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL);
-                    await document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
+                    Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
+                    cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+    
+                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
                     recognizer.setImageSource(cameraEnhancer);
-                    cameraEnhancer.ifShowScanRegionLaser = true;
-
-                    await recognizer.startScanning(true);
+                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+    
+                    await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
                     
                     recognizer.onImageRead = async results => {
                         for (let result of results) {
@@ -67,10 +58,13 @@
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
-                } catch (ex) {
-                    alert(ex.message);
-                    throw ex;
-                }
+                })());
+
+                await recognizer.startScanning(true);
+                cameraEnhancer.ifShowScanRegionLaser = true;
+            } catch (ex) {
+                alert(ex.message);
+                throw ex;
             }
         };
     </script>

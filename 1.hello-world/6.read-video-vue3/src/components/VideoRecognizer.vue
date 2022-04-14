@@ -27,7 +27,7 @@
 <script>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { CameraEnhancer } from "dynamsoft-camera-enhancer";
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 
 export default {
   setup() {

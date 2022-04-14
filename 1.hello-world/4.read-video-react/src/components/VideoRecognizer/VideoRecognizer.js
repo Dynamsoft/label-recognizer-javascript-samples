@@ -1,5 +1,5 @@
 import { CameraEnhancer } from "dynamsoft-camera-enhancer";
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 import './VideoRecognizer.css'
 import React from 'react';
 

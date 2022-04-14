@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 import './ImgRecognizer.css'
 
 export default class ImgDecode extends Component {

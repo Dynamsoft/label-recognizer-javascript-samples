@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CameraEnhancer } from 'dynamsoft-camera-enhancer';
-import { LabelRecognizer } from 'keillion-dynamsoft-label-recognizer';
+import { LabelRecognizer } from 'dynamsoft-label-recognizer';
 @Component({
   selector: 'app-video-recognizer',
   templateUrl: './video-recognizer.component.html',

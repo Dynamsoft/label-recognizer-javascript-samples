@@ -1,6 +1,6 @@
 import './HelloWorld.css';
 import reactLogo from '../../logo.svg';
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 import React from 'react';
 import VideoRecognizer from '../VideoRecognizer/VideoRecognizer';
 import ImgRecognizer from '../ImgRecognizer/ImgRecognizer';

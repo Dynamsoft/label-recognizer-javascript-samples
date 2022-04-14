@@ -4,37 +4,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
-    <meta name="keywords" content="camera based label recognizing">
+    <meta name="description" content="Recognize labels with Dynamsoft Label Recognizer in various templates.">
+    <meta name="keywords" content="label recognizing in diffierent templates">
     <title>use-templates</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/dlr.js"></script>
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <select id="select-tpl">
+        <option value="video-numberLetter">numberLetter</option>
         <option value="video-passportMRZ">passportMRZ</option>
         <option value="video-visaMRZ">visaMRZ</option>
         <option value="video-MRZ">MRZ</option>
         <option value="video-VIN_NA">VIN_NA</option>
         <option value="video-VIN">VIN</option>
-        <option value="video-numberLetter">numberLetter</option>
         <option value="video-number">number</option>
         <option value="video-numberUpperCase">numberUpperCase</option>
         <option value="video-letter">letter</option>
     </select>
     <button id="btn-open-recognizer">Open Label Recognizer</button>
-    <div id="div-video-container" style="margin-top: 50px; height: 700px;"></div>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.0.3/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.2/dist/dlr.js" data-license="Product-Keys"></script>
+    <div id="div-ui-container" style="margin-top: 50px; height: 75vh;"></div>
     <script>       
         let recognizer = null;
-        let promiseDlrReady;
+        let cameraEnhancer = null;
+        let promiseDLRReady;
+
+        /** LICENSE ALERT - README 
+         * To use the library, you need to first specify a license key using the API "license" as shown below.
+         */
+         Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+        /** 
+         * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
+         * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
+         * For more information, see https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest#specify-the-license or contact support@dynamsoft.com.
+         * LICENSE ALERT - THE END 
+         */
 
         document.getElementById('select-tpl').addEventListener('change', async function() {
             // Loading settings is expensive, so we check `isOpen` to lazy load settings.
             // Change to `if(recognizer)` if you want to load settings immediately.
-            if(recognizer && recognizer.cameraEnhancer && recognizer.cameraEnhancer.isOpen()) {
+            if(recognizer && cameraEnhancer && cameraEnhancer.isOpen()) {
                 await recognizer.updateRuntimeSettingsFromString(this.value);
             }
         });
@@ -44,10 +55,10 @@
                 const selectTpl = document.getElementById('select-tpl');
 
                 // create an instance only once
-                await (promiseDlrReady = promiseDlrReady || (async() => {
+                await (promiseDLRReady = promiseDLRReady || (async() => {
 
                     Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
-                    let cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+                    cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
 
                     // callback of resources loading
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
@@ -56,33 +67,29 @@
                     };
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
 
-                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance({
-                        runtimeSettings: selectTpl.value
-                    });
-                    document.getElementById('div-video-container').append(cameraEnhancer.getUIElement());
-                    recognizer.cameraEnhancer = cameraEnhancer;
+                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
+                    document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
+                    recognizer.setImageSource(cameraEnhancer);
                     
-                    recognizer.onFrameRead = async results => {
+                    recognizer.onImageRead = async results => {
                         for (let result of results) {
                             for (let lineResult of result.lineResults) {
                                 console.log(lineResult.text);
                             }
                         }
                     };
-                        
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
-
                     recognizer.onMRZRead = (txt) => {
                         alert(txt);
                         console.log("MRZ Code Found: " + txt);
                     }
-
                 })());
             
                 await recognizer.startScanning(true);
+                cameraEnhancer.ifShowScanRegionLaser = true;
                 await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
 
             }catch(ex) {

@@ -12,7 +12,7 @@ export default class ImgDecode extends Component {
   async componentDidMount() {
     await (this.pRecognizer = LabelRecognizer.createInstance({runtimeSettings: "numberletter"}));
   }
-
+  
   decodeImg = async (e) => {
     try {
       const recognizer = await this.pRecognizer;

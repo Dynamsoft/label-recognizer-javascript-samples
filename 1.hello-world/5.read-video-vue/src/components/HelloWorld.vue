@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
+import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 import VideoRecognizer from "./VideoRecognizer.vue";
 import ImgRecognizer from "./ImgRecognizer.vue"
 

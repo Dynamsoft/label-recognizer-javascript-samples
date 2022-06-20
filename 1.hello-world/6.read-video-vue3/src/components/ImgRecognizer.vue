@@ -4,7 +4,7 @@
 
 <script>
 import { onBeforeUnmount, onMounted, ref } from '@vue/runtime-core';
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
+import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 export default {
   name: 'ImgRecognizer',
   setup() {
@@ -12,7 +12,7 @@ export default {
     const pRecognizer = ref(null);
 
     onMounted(async ()=>{
-      await (pRecognizer.value = LabelRecognizer.createInstance({runtimeSettings: "numberletter"}));
+      await (pRecognizer.value = LabelRecognizer.createInstance({runtimeSettings: "mrz"}));
     })
 
     const decodeImg = async (e) => {

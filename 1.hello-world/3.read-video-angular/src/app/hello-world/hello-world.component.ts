@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import '../dce'; // import side effects. The license, engineResourcePath, so on.
 import '../dlr'; // import side effects. The license, engineResourcePath, so on.
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
+import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 
 @Component({
   selector: 'app-hello-world',

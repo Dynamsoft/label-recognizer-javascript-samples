@@ -1,5 +1,5 @@
 import { CameraEnhancer } from "dynamsoft-camera-enhancer";
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
+import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 import './VideoRecognizer.css'
 import React from 'react';
 
@@ -27,17 +27,30 @@ class VideoRecognizer extends React.Component {
 
             await recognizer.startScanning(true);
 
-            recognizer.onImageRead = results => {
+            // Triggered when the video frame is decoded
+            recognizer.onImageRead = (results) => {
                 for (let result of results) {
                     for (let lineResult of result.lineResults) {
-                        console.log(lineResult.text);
+                        console.log("Image Read: ", lineResult.text);
                     }
                 }
             };
 
+            // Triggered when a different result is decoded
             recognizer.onUniqueRead = (txt) => {
                 alert(txt);
                 console.log("Unique Code Found: " + txt);
+            }
+
+            // Callback to MRZ decoding result
+            recognizer.onMRZRead = (txt, results) => {
+                console.log("MRZ text: ",txt);
+                console.log("MRZ results: ", results);
+            }
+
+            // Callback to VIN decoding result
+            recognizer.onVINRead = (txt) => {
+                console.log("VIN results: ",txt);
             }
         } catch (ex) {
             console.error(ex);

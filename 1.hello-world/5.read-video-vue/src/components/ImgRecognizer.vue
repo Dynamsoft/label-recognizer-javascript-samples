@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
+import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
 export default {
   name: 'ImgDecode',
   data() {

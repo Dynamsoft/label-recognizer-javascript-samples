@@ -14,10 +14,10 @@
     <button id="recognizeLabel">Open Label Recognizer</button>
     <div id="div-ui-container" style="margin-top: 50px;width:100%;height:75vh;"></div>
     <script>
-        requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js'], function(
+        requirejs(['https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220619222605.0/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js'], function(
             DLR, DCE
         ) {
-            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/";
+            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220619222605.0/dist/";
             DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/"
 
             /** LICENSE ALERT - README 
@@ -48,20 +48,34 @@
                         DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                         recognizer = await DLR.LabelRecognizer.createInstance();
                         recognizer.setImageSource(cameraEnhancer);
-                        await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+                        await recognizer.updateRuntimeSettingsFromString("video-numberletter");
 
                         await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 
-                        recognizer.onImageRead = results => {
+                        // Triggered when the video frame is decoded
+                        recognizer.onImageRead = (results) => {
                             for (let result of results) {
                                 for (let lineResult of result.lineResults) {
-                                    console.log(lineResult.text);
+                                    console.log("Imaage Read: ", lineResult.text);
                                 }
                             }
                         };
+
+                        // Triggered when a different result is decoded
                         recognizer.onUniqueRead = (txt) => {
                             alert(txt);
                             console.log("Unique Code Found: " + txt);
+                        }
+
+                        // Callback to MRZ decoding result
+                        recognizer.onMRZRead = (txt, results) => {
+                            console.log("MRZ text: ",txt);
+                            console.log("MRZ results: ", results);
+                        }
+
+                        // Callback to VIN decoding result
+                        recognizer.onVINRead = (txt) => {
+                            console.log("VIN results: ",txt);
                         }
                     })());
 

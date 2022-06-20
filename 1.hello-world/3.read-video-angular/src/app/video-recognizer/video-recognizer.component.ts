@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CameraEnhancer } from 'dynamsoft-camera-enhancer';
-import { LabelRecognizer } from 'dynamsoft-label-recognizer';
+import { LabelRecognizer } from 'keillion-dynamsoft-label-recognizer';
 @Component({
   selector: 'app-video-recognizer',
   templateUrl: './video-recognizer.component.html',
@@ -29,17 +29,30 @@ export class VideoRecognizerComponent implements OnInit {
 
       await recognizer.startScanning(true);
 
-      recognizer.onImageRead = results => {
-          for (let result of results) {
-              for (let lineResult of result.lineResults) {
-                  console.log(lineResult.text);
-              }
+      // Triggered when the video frame is decoded
+      recognizer.onImageRead = (results: any) => {
+        for (let result of results) {
+          for (let lineResult of result.lineResults) {
+            console.log("Image Read: ", lineResult.text);
           }
+        }
       };
 
-      recognizer.onUniqueRead = (txt) => {
-          alert(txt);
-          console.log("Unique Code Found: " + txt);
+      // Triggered when a different result is decoded
+      recognizer.onUniqueRead = (txt: string) => {
+        alert(txt);
+        console.log("Unique Code Found: " + txt);
+      }
+
+      // Callback to MRZ decoding result
+      recognizer.onMRZRead = (txt: string, results: any) => {
+        console.log("MRZ text: ",txt);
+        console.log("MRZ results: ", results);
+      }
+
+      // Callback to VIN decoding result
+      recognizer.onVINRead = (txt: string) => {
+        console.log("VIN results: ",txt);
       }
   } catch (ex) {
       console.error(ex);

@@ -10,7 +10,7 @@
     "dependencies": {
         "core-js": "^3.6.5",
         "dynamsoft-camera-enhancer": "2.3.2",
-        "dynamsoft-label-recognizer": "2.2.4",
+        "keillion-dynamsoft-label-recognizer": "0.20220619222605.0",
         "vue": "^2.6.11"
     },
     "devDependencies": {

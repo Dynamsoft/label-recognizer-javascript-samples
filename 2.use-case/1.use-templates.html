@@ -8,7 +8,7 @@
     <meta name="keywords" content="label recognizing in diffierent templates">
     <title>use-templates</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220619222605.0/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -71,20 +71,30 @@
                     document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
                     recognizer.setImageSource(cameraEnhancer);
                     
-                    recognizer.onImageRead = async results => {
+                    // Triggered when the video frame is decoded
+                    recognizer.onImageRead = (results) => {
                         for (let result of results) {
                             for (let lineResult of result.lineResults) {
-                                console.log(lineResult.text);
+                                console.log("Image Read: ", lineResult.text);
                             }
                         }
                     };
+
+                    // Triggered when a different result is decoded
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
-                    recognizer.onMRZRead = (txt) => {
-                        alert(txt);
-                        console.log("MRZ Code Found: " + txt);
+
+                    // Callback to MRZ decoding result
+                    recognizer.onMRZRead = (txt, results) => {
+                        console.log("MRZ text: ",txt);
+                        console.log("MRZ results: ", results);
+                    }
+
+                    // Callback to VIN decoding result
+                    recognizer.onVINRead = (txt) => {
+                        console.log("VIN results: ",txt);
                     }
                 })());
             

@@ -2,7 +2,7 @@ let recognizer = null;
 let cameraEnhancer = null;
 let promiseDLRReady;
 
-Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220619222605.0/dist/"; 
+Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220620021118.0/dist/"; 
 Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
 
 /** LICENSE ALERT - README 

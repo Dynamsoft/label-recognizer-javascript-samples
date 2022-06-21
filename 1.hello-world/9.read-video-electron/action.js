@@ -2,7 +2,7 @@ let recognizer = null;
 let cameraEnhancer = null;
 let promiseDLRReady;
 
-Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220620021118.0/dist/"; 
+Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/"; 
 Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
 
 /** LICENSE ALERT - README 
@@ -25,7 +25,7 @@ document.getElementById('recognizeLabel').onclick = async () => {
 
             recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
             recognizer.setImageSource(cameraEnhancer);
-            await recognizer.updateRuntimeSettingsFromString("video-mrz");
+            await recognizer.updateRuntimeSettingsFromString("video-numberletter");
 
             await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
             

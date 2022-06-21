@@ -1,5 +1,5 @@
 import { CameraEnhancer } from "dynamsoft-camera-enhancer";
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 import './VideoRecognizer.css'
 import React from 'react';
 
@@ -22,7 +22,7 @@ class VideoRecognizer extends React.Component {
             let recognizer = await (this.pRecognizer = LabelRecognizer.createInstance());
 
             recognizer.setImageSource(cameraEnhancer);
-            await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+            await recognizer.updateRuntimeSettingsFromString("video-numberletter");
             cameraEnhancer.ifShowScanRegionLaser = true;
 
             await recognizer.startScanning(true);

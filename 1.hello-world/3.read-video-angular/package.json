@@ -20,7 +20,7 @@
         "@angular/platform-browser-dynamic": "~11.2.5",
         "@angular/router": "~11.2.5",
         "dynamsoft-camera-enhancer": "2.3.2",
-        "keillion-dynamsoft-label-recognizer": "0.20220620021118.0",
+        "dynamsoft-label-recognizer": "2.2.10",
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
         "zone.js": "~0.11.3"

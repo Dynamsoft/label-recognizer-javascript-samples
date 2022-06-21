@@ -17,7 +17,7 @@
 import VideoRecognizer from "./VideoRecognizer";
 import ImgRecognizer from './ImgRecognizer.vue'
 import { ref, onMounted } from "vue";
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 
 export default {
   name: "HelloWorld",

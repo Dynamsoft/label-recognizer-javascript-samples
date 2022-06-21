@@ -1,6 +1,6 @@
-import { LabelRecognizer } from "keillion-dynamsoft-label-recognizer";
+import { LabelRecognizer } from "dynamsoft-label-recognizer";
 
-LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/keillion-dynamsoft-label-recognizer@0.20220620021118.0/dist/";
+LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/";
 /** LICENSE ALERT - README
  * To use the library, you need to first specify a license key using the API "license" as shown below.
  */

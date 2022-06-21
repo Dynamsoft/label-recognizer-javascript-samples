@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {LabelRecognizer} from 'keillion-dynamsoft-label-recognizer';
+import {LabelRecognizer} from 'dynamsoft-label-recognizer';
 
 @Component({
   selector: 'app-image-recognizer',

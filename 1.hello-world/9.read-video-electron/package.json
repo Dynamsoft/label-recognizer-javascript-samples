@@ -11,6 +11,6 @@
     "dependencies": {
         "dynamsoft-camera-enhancer": "2.3.2",
         "electron": "14.0.1",
-        "keillion-dynamsoft-label-recognizer": "0.20220620021118.0"
+        "dynamsoft-label-recognizer": "2.2.10"
     }
 }

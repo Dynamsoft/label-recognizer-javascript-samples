@@ -25,7 +25,14 @@ export default class ImgDecode extends Component {
       }
       this.iptRef.current.value = '';
     } catch(ex) {
-      console.error(ex);
+      let errMsg;
+      if (ex.message.includes("network connection error")) {
+        errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+      } else {
+        errMsg = ex.message||ex;
+      }
+      console.error(errMsg);
+      alert(errMsg);
     }
   }
 

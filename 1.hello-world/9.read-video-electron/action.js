@@ -2,7 +2,7 @@ let recognizer = null;
 let cameraEnhancer = null;
 let promiseDLRReady;
 
-Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/"; 
+Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/"; 
 Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/";
 
 /** LICENSE ALERT - README 
@@ -25,28 +25,47 @@ document.getElementById('recognizeLabel').onclick = async () => {
 
             recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
             recognizer.setImageSource(cameraEnhancer);
-            await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+            await recognizer.updateRuntimeSettingsFromString("video-numberletter");
 
             await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
             
-            recognizer.onImageRead = async results => {
+            // Triggered when the video frame is decoded
+            recognizer.onImageRead = (results) => {
                 for (let result of results) {
                     for (let lineResult of result.lineResults) {
-                        console.log(lineResult.text);
+                        console.log("Image Read: ", lineResult.text);
                     }
                 }
             };
-            
+
+            // Triggered when a different result is decoded
             recognizer.onUniqueRead = (txt) => {
                 alert(txt);
                 console.log("Unique Code Found: " + txt);
+            }
+
+            // Callback to MRZ decoding result
+            recognizer.onMRZRead = (txt, results) => {
+                console.log("MRZ text: ",txt);
+                console.log("MRZ results: ", results);
+            }
+
+            // Callback to VIN decoding result
+            recognizer.onVINRead = (txt) => {
+                console.log("VIN results: ",txt);
             }
         })());
 
         await recognizer.startScanning(true);
         cameraEnhancer.ifShowScanRegionLaser = true;
     } catch (ex) {
-        alert(ex.message);
-        throw ex;
+        let errMsg;
+        if (ex.message.includes("network connection error")) {
+            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+        } else {
+            errMsg = ex.message||ex;
+        }
+        console.error(errMsg);
+        alert(errMsg);
     }
 };

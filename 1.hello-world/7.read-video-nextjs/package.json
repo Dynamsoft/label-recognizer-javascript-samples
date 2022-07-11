@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "dynamsoft-camera-enhancer": "2.3.2",
-        "dynamsoft-label-recognizer": "2.2.4",
+        "dynamsoft-label-recognizer": "2.2.10",
         "next": "11.1.2",
         "react": "17.0.2",
         "react-dom": "17.0.2"

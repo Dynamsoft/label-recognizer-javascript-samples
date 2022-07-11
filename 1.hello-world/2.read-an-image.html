@@ -24,7 +24,7 @@
         .sp-resultText { color: #cE5E04 }
         #div-cvs-container canvas { border: solid 1px gray; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.4/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/dlr.js"></script>
     <script>
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -45,7 +45,7 @@
             try {
                 const recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance());
                 recognizer.ifSaveOriginalImageInACanvas = true;
-                await recognizer.updateRuntimeSettingsFromString("NumberLetter");
+                await recognizer.updateRuntimeSettingsFromString("numberletter");
                 document.getElementById('p-loading').style.display = 'none';
             } catch (ex) {
                 alert(ex.message);
@@ -92,8 +92,14 @@
                 divResults.appendChild(document.createElement('hr'));
                 divResults.scrollTop = divResults.scrollHeight;
             } catch (ex) {
-                alert(ex.message);
-                throw ex;
+                let errMsg;
+                if (ex.message.includes("network connection error")) {
+                    errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+                } else {
+                    errMsg = ex.message||ex;
+                }
+                console.error(errMsg);
+                alert(errMsg);
             } finally {
                 pRecognizing.style.display = 'none';
                 this.value = '';

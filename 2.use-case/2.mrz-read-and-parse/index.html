@@ -24,30 +24,45 @@
     /** LICENSE ALERT - README 
      * To use the library, you need to first specify a license key using the API "license" as shown below.
      */
-    // Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
-    Dynamsoft.DLR.LabelRecognizer.license = "t0068MgAAAJflqIAhIKDYv+xyGae3K54995PXL/0zKti4qxmwbf7+V7zb/BdEaaJx9aZ1DEQjCvFaf24KiIV58fINIgtOSKM=";
+    Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
     /** 
      * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
      * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
      * For more information, see https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest#specify-the-license or contact support@dynamsoft.com.
      * LICENSE ALERT - THE END 
      */
+    (async()=>{
+      try{
+        await Dynamsoft.DLR.LabelRecognizer.loadWasm();
+      }catch {
+        let errMsg;
+        if (ex.message.includes("network connection error")) {
+            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+        } else {
+            errMsg = ex.message||ex;
+        }
+        console.error(errMsg);
+        alert(errMsg);
+      }
+    })();
+
     document.getElementById('btn-open-recognize').addEventListener('click', async () => {
       try {
         await (promiseDLRReady = promiseDLRReady || (async () => {
-          Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
           cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-          cameraEnhancer.setVideoFit('cover');
 
           recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcePath, progress) => {
             // In this event handler, you can display the loading progress of the model file.
-            document.querySelector('#model-loading').innerHTML = "Model Loading..." + " " + progress.loaded + " / " + progress.total;
+            document.querySelector('#model-loading').innerHTML = "Model Loading..." + " " + (progress.loaded / progress.total).toFixed(2)*100 + "%";
           }
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcePath) => {
             // In this event handler, you can close the visual cue if it was displayed.
             document.querySelector('#model-loading').innerHTML = "";
           };
+          cameraEnhancer.on("cameraClose", () => {
+            document.querySelector("#mrz-results").innerHTML = '';
+          });
           recognizer.setImageSource(cameraEnhancer);
           await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
@@ -62,7 +77,6 @@
             let parseResults;
             if(results.length === 2) {
               parseResults = mrzParseTwoLine(results[0].text, results[1].text);
-              console.log(parseResults);
             } else if(results.length === 3) {
               parseResults = mrzParseThreeLine(results[0].text, results[1].text, results[2].text);
             }
@@ -74,10 +88,9 @@
               document.querySelector("#mrz-results").appendChild(infoDiv);
             }
           }
-
-          await recognizer.startScanning(true);
           cameraEnhancer.ifShowScanRegionLaser = true;
         })());
+        await recognizer.startScanning(true);
       } catch(ex) {
         let errMsg;
         if (ex.message.includes("network connection error")) {

@@ -7,7 +7,7 @@ This sample demonstrates the most popular use case of **Dynamsoft Label Recogniz
 ## Prerequisites
 
 * A device with an accessible camera, such as a mobile phone or a computer with a webcam.
-* A passport, a ID card, a VISA or a picture of such documents where there is a machine-readable zone to read.
+* A passport, a ID card, a VISA or a picture of one of these documents where there is a machine-readable zone to read.
 
 ## How it works
 
@@ -20,8 +20,8 @@ The following shows the workflow:
     ```
 
 2. An instance of Dynamsoft Camera Enhancer SDK (`cameraEnhancer`) is used to open the camera and display its video feed on the page;
-3. `recognizer` sets `cameraEnhancer` as its image source and (internally) requires it to cropped the video frames and provide only a narrow rectangular part of them as images to be read;
-4. `recognizer` reads these images, recognize all the characters of the machine-readable zone and assemble them as MRZ results (multiple lines of text);
+3. `recognizer` sets `cameraEnhancer` as its image source and (internally) requires it to cropped the video frames and provide only a narrow rectangular part of them as images to be read. A rectangular shape will appear on the video feed to guide you to aim at the MRZ;
+4. `recognizer` reads these images, recognize all the characters of the MRZ and assemble them as MRZ results (multiple lines of text);
 5. The MRZ results are parsed in the function `parseMrzAndUpdateDom()` into meaningful information, which is shown on the page.
 
     ```js

@@ -31,6 +31,8 @@ Use cases of the library.
 
 2. **Read and Parse MRZ**: This sample demonstrates the most popular use case of the SDK which is to read and parse the machine readable zones (MRZs) usually found on passports, VISAs, etc.
 
+> For a more complex sample, check out the [source code for the Label Recognizer Demo](https://github.com/Dynamsoft/label-recognizer-javascript-demo).
+
 ## Contact Us
 
 If you have any questions with these samples, feel free to submit an issue or [contact us](https://www.dynamsoft.com/company/contact/).

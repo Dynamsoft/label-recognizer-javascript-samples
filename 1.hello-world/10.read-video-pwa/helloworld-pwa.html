@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in a PWA application.">
     <meta name="keywords" content="recognize label from camera in PWA">
-    <title>Dynamsoft Label Recognizer PWA Sample - Hello World (Decoding via Camera)</title>
+    <title>Dynamsoft Label Recognizer PWA Sample - Hello World (recognizing via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/dlr.js"></script>
     <link rel="manifest" href="./helloworld-pwa.json">
@@ -41,18 +41,15 @@
             });
             try {
                 await (promiseDLRReady = promiseDLRReady || (async() => {
-                    
-                    Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
-                    
                     cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
 
-                    recognizer.setImageSource(cameraEnhancer);
+                    await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
                     await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
     
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
                     
-                    // Triggered when the video frame is decoded
+                    // Triggered when the video frame is recognized
                     recognizer.onImageRead = (results) => {
                         for (let result of results) {
                             for (let lineResult of result.lineResults) {
@@ -61,26 +58,25 @@
                         }
                     };
 
-                    // Triggered when a different result is decoded
+                    // Triggered when a different result is recognized
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
 
-                    // Callback to MRZ decoding result
+                    // Callback to MRZ recognizing result
                     recognizer.onMRZRead = (txt, results) => {
                         console.log("MRZ text: ",txt);
                         console.log("MRZ results: ", results);
                     }
 
-                    // Callback to VIN decoding result
+                    // Callback to VIN recognizing result
                     recognizer.onVINRead = (txt) => {
                         console.log("VIN results: ",txt);
                     }
                 })());
 
                 await recognizer.startScanning(true);
-                cameraEnhancer.ifShowScanRegionLaser = true;
             } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {

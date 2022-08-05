@@ -19,17 +19,15 @@ Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ
 document.getElementById('recognizeLabel').onclick = async () => {
     try {
         await (promiseDLRReady = promiseDLRReady || (async() => {
-
-            Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL = Dynamsoft.DLR.LabelRecognizer.defaultUIElementURL;
             cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
 
             recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
-            recognizer.setImageSource(cameraEnhancer);
+            await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
             await recognizer.updateRuntimeSettingsFromString("video-numberletter");
 
             await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
             
-            // Triggered when the video frame is decoded
+            // Triggered when the video frame is recognized
             recognizer.onImageRead = (results) => {
                 for (let result of results) {
                     for (let lineResult of result.lineResults) {
@@ -38,26 +36,25 @@ document.getElementById('recognizeLabel').onclick = async () => {
                 }
             };
 
-            // Triggered when a different result is decoded
+            // Triggered when a different result is recognized
             recognizer.onUniqueRead = (txt) => {
                 alert(txt);
                 console.log("Unique Code Found: " + txt);
             }
 
-            // Callback to MRZ decoding result
+            // Callback to MRZ recognizing result
             recognizer.onMRZRead = (txt, results) => {
                 console.log("MRZ text: ",txt);
                 console.log("MRZ results: ", results);
             }
 
-            // Callback to VIN decoding result
+            // Callback to VIN recognizing result
             recognizer.onVINRead = (txt) => {
                 console.log("VIN results: ",txt);
             }
         })());
 
         await recognizer.startScanning(true);
-        cameraEnhancer.ifShowScanRegionLaser = true;
     } catch (ex) {
         let errMsg;
         if (ex.message.includes("network connection error")) {

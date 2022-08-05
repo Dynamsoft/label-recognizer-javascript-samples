@@ -26,7 +26,7 @@
 
 <script>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { CameraEnhancer } from "dynamsoft-camera-enhancer";
+import { CameraEnhancer, DrawingItem } from "dynamsoft-camera-enhancer";
 import { LabelRecognizer } from "dynamsoft-label-recognizer";
 
 export default {
@@ -45,13 +45,12 @@ export default {
         LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
         let recognizer = await (pRecognizer.value =  LabelRecognizer.createInstance());
 
-        recognizer.setImageSource(cameraEnhancer);
+        await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
         await recognizer.updateRuntimeSettingsFromString("video-numberletter");
-        cameraEnhancer.ifShowScanRegionLaser = true;
 
         await recognizer.startScanning(true);
 
-        // Triggered when the video frame is decoded
+        // Triggered when the video frame is recognized
         recognizer.onImageRead = (results) => {
           for (let result of results) {
             for (let lineResult of result.lineResults) {
@@ -60,19 +59,19 @@ export default {
           }
         };
 
-        // Triggered when a different result is decoded
+        // Triggered when a different result is recognized
         recognizer.onUniqueRead = (txt) => {
           alert(txt);
           console.log("Unique Code Found: ", txt);
         }
 
-        // Callback to MRZ decoding result
+        // Callback to MRZ recognizing result
         recognizer.onMRZRead = (txt, results) => {
           console.log("MRZ text: ",txt);
           console.log("MRZ results: ", results);
         }
 
-        // Callback to VIN decoding result
+        // Callback to VIN recognizing result
         recognizer.onVINRead = (txt) => {
           console.log("VIN results: ",txt);
         }

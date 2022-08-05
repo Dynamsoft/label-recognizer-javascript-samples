@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
     <meta name="keywords" content="camera based label recognizing">
-    <title>Dynamsoft Label Recognize Sample - Hello World (Decoding via Camera)</title>
+    <title>Dynamsoft Label Recognize Sample - Hello World (recognizing via Camera)</title>
 </head>
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <button id="btn-open-recognize">Open Label Recognizer</button>
     <div id="div-ui-container" style="margin-top: 50px;width: 100%; height: 75vh;"></div>
     <script type="module">
-        import { CameraEnhancer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.mjs';
+        import { CameraEnhancer, DrawingItem } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.2/dist/dce.mjs';
         import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/dlr.mjs'; 
 
         LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.10/dist/"; 
@@ -35,7 +35,6 @@
         document.getElementById('btn-open-recognize').addEventListener('click', async () => {
             try {
                 await (promiseDLRReady = promiseDLRReady || (async() => {
-                    CameraEnhancer.defaultUIElementURL = LabelRecognizer.defaultUIElementURL;
                     cameraEnhancer = await CameraEnhancer.createInstance();
                     LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
                     LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
@@ -43,12 +42,12 @@
                     };
                     LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                     recognizer = await LabelRecognizer.createInstance();
-                    recognizer.setImageSource(cameraEnhancer);
+                    await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
                     await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
 
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 
-                    // Triggered when the video frame is decoded
+                    // Triggered when the video frame is recognized
                     recognizer.onImageRead = (results) => {
                         for (let result of results) {
                             for (let lineResult of result.lineResults) {
@@ -57,25 +56,24 @@
                         }
                     };
 
-                    // Triggered when a different result is decoded
+                    // Triggered when a different result is recognized
                     recognizer.onUniqueRead = (txt) => {
                         alert(txt);
                         console.log("Unique Code Found: " + txt);
                     }
 
-                    // Callback to MRZ decoding result
+                    // Callback to MRZ recognizing result
                     recognizer.onMRZRead = (txt, results) => {
                         console.log("MRZ text: ",txt);
                         console.log("MRZ results: ", results);
                     }
 
-                    // Callback to VIN decoding result
+                    // Callback to VIN recognizing result
                     recognizer.onVINRead = (txt) => {
                         console.log("VIN results: ",txt);
                     }
                 })());
                 await recognizer.startScanning(true);
-                cameraEnhancer.ifShowScanRegionLaser = true;
             } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CameraEnhancer } from 'dynamsoft-camera-enhancer';
+import { CameraEnhancer, DrawingItem } from 'dynamsoft-camera-enhancer';
 import { LabelRecognizer } from 'dynamsoft-label-recognizer';
 @Component({
   selector: 'app-video-recognizer',
@@ -23,13 +23,12 @@ export class VideoRecognizerComponent implements OnInit {
       LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
       let recognizer = await (this.pRecognizer = LabelRecognizer.createInstance());
 
-      recognizer.setImageSource(cameraEnhancer);
+      await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
       await recognizer.updateRuntimeSettingsFromString("video-numberletter");
-      cameraEnhancer.ifShowScanRegionLaser = true;
 
       await recognizer.startScanning(true);
 
-      // Triggered when the video frame is decoded
+      // Triggered when the video frame is recognized
       recognizer.onImageRead = (results: any) => {
         for (let result of results) {
           for (let lineResult of result.lineResults) {
@@ -38,19 +37,19 @@ export class VideoRecognizerComponent implements OnInit {
         }
       };
 
-      // Triggered when a different result is decoded
+      // Triggered when a different result is recognized
       recognizer.onUniqueRead = (txt: string) => {
         alert(txt);
         console.log("Unique Code Found: " + txt);
       }
 
-      // Callback to MRZ decoding result
+      // Callback to MRZ recognizing result
       recognizer.onMRZRead = (txt: string, results: any) => {
         console.log("MRZ text: ",txt);
         console.log("MRZ results: ", results);
       }
 
-      // Callback to VIN decoding result
+      // Callback to VIN recognizing result
       recognizer.onVINRead = (txt: string) => {
         console.log("VIN results: ",txt);
       }

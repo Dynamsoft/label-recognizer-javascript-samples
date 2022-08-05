@@ -63,12 +63,12 @@
           cameraEnhancer.on("cameraClose", () => {
             document.querySelector("#mrz-results").innerHTML = '';
           });
-          recognizer.setImageSource(cameraEnhancer);
+          await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
           await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
           await document.getElementById('div-ui-container').appendChild(cameraEnhancer.getUIElement());
 
-          // Callback to MRZ decoding result
+          // Callback to MRZ recognizing result
           recognizer.onMRZRead = (txt, results) => {
             parseMrzAndUpdateDom(results);
           }
@@ -88,7 +88,6 @@
               document.querySelector("#mrz-results").appendChild(infoDiv);
             }
           }
-          cameraEnhancer.ifShowScanRegionLaser = true;
         })());
         await recognizer.startScanning(true);
       } catch(ex) {

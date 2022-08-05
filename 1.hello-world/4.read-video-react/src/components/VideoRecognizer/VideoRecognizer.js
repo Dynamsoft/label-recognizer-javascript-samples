@@ -13,7 +13,7 @@ class VideoRecognizer extends React.Component {
     async componentDidMount() {
         try {
             let cameraEnhancer = await (this.pCameraEnhancer = CameraEnhancer.createInstance());
-            cameraEnhancer.setUIElement(this.elRef.current);
+            await cameraEnhancer.setUIElement(this.elRef.current);
             LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
             LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
                 console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
@@ -79,7 +79,7 @@ class VideoRecognizer extends React.Component {
                 <svg className="dce-bg-camera" viewBox="0 0 2048 1792"><path d="M1024 672q119 0 203.5 84.5t84.5 203.5-84.5 203.5-203.5 84.5-203.5-84.5-84.5-203.5 84.5-203.5 203.5-84.5zm704-416q106 0 181 75t75 181v896q0 106-75 181t-181 75h-1408q-106 0-181-75t-75-181v-896q0-106 75-181t181-75h224l51-136q19-49 69.5-84.5t103.5-35.5h512q53 0 103.5 35.5t69.5 84.5l51 136h224zm-704 1152q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>
                 <div className="dce-video-container"></div>
                 <div className="dce-scanarea">
-                    <div className="dce-scanlight" style={{display:'none'}}></div>
+                    <div className="dce-scanlight"></div>
                 </div>
                 <div className="sel-container">
                     <select className="dce-sel-camera"></select>

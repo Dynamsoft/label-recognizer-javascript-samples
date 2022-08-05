@@ -15,7 +15,7 @@ export class VideoRecognizerComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       let cameraEnhancer = await (this.pCameraEnhancer = CameraEnhancer.createInstance());
-      cameraEnhancer.setUIElement((this as any).container.nativeElement);
+      await cameraEnhancer.setUIElement((this as any).container.nativeElement);
       LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
       LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
           console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);

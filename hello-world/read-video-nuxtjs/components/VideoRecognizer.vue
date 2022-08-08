@@ -49,7 +49,7 @@ export default {
 
             await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
             // await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
-            await recognizer.updateRuntimeSettingsFromString("video-mrz");
+            await recognizer.updateRuntimeSettingsFromString("video-numberletter");
 
             await recognizer.startScanning(true);
 

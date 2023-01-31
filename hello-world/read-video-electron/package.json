@@ -1,6 +1,6 @@
 {
-    "name": "read-video-electron",
-    "version": "1.0.0",
+    "name": "dlrjs-electron-sample",
+    "version": "2.2.30",
     "description": "How to recognize labels from a video input in an Electron App",
     "main": "main.js",
     "scripts": {

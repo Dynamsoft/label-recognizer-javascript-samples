@@ -1,6 +1,6 @@
 {
-    "name": "read-video-nextjs",
-    "version": "0.1.0",
+    "name": "dlrjs-nextjs-sample",
+    "version": "2.2.30",
     "private": true,
     "scripts": {
         "dev": "next dev",

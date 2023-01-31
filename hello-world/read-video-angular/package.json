@@ -1,6 +1,6 @@
 {
-    "name": "hello-world",
-    "version": "0.0.0",
+    "name": "dlrjs-angular-sample",
+    "version": "2.2.30",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",

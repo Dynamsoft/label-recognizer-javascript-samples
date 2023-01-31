@@ -1,6 +1,6 @@
 {
-    "name": "read-video-vue3",
-    "version": "0.1.0",
+    "name": "dlrjs-vue3-sample",
+    "version": "2.2.30",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",

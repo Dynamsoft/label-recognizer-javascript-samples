@@ -1,6 +1,6 @@
 {
-    "name": "read-video-nuxtjs",
-    "version": "1.0.0",
+    "name": "dlrjs-nuxtjs-sample",
+    "version": "2.2.30",
     "private": true,
     "scripts": {
         "dev": "nuxt",

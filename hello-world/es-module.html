@@ -43,7 +43,7 @@
                     LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                     recognizer = await LabelRecognizer.createInstance();
                     await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
-                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+                    await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 

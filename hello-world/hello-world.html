@@ -39,7 +39,7 @@
     
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
                     await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
-                    await recognizer.updateRuntimeSettingsFromString("video-numberletter");
+                    await recognizer.updateRuntimeSettingsFromString("video-mrz");
     
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
                     

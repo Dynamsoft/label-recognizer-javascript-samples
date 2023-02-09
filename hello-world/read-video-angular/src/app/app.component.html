@@ -1,1 +1,12 @@
-<app-hello-world></app-hello-world>
+<div class='App'>
+  <div class='title'>
+    <h2 class='title-text'>Hello World for Vue</h2>
+    <img class='title-logo' src="./assets/logo.svg" alt="logo" />
+  </div>
+  <div class='top-btns'>
+    <button (click)="switchMode('video')" [ngStyle]="{'background-color': mode === 'video' ? 'rgb(255,174,55)' : 'white'}">VideoRecognizer</button>
+    <button (click)="switchMode('image')" [ngStyle]="{'background-color': mode === 'image' ? 'rgb(255,174,55)' : 'white'}">ImageRecognizer</button>
+  </div>
+  <app-video-recognizer *ngIf="mode === 'video'"></app-video-recognizer>
+  <app-image-recognizer *ngIf="mode === 'image'"></app-image-recognizer>
+</div>

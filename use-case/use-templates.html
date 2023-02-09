@@ -7,8 +7,8 @@
     <meta name="description" content="Recognize labels with Dynamsoft Label Recognizer in various templates.">
     <meta name="keywords" content="label recognizing in diffierent templates">
     <title>use-templates</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -56,14 +56,10 @@
 
                 // create an instance only once
                 await (promiseDLRReady = promiseDLRReady || (async() => {
-
                     cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-
                     // callback of resources loading
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
-                        console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
-                    };
+                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);};
                     Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
 
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
@@ -86,21 +82,20 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = (txt, results) => {
-                        console.log("MRZ text: ",txt);
-                        console.log("MRZ results: ", results);
+                    recognizer.onMRZRead = async (txt, results) => {
+                        console.log("MRZ results: \n", txt, "\n", results);
                     }
 
                     // Callback to VIN recognizing result
-                    recognizer.onVINRead = (txt) => {
-                        console.log("VIN results: ",txt);
+                    recognizer.onVINRead = (txt, results) => {
+                        console.log("VIN results: ",txt, results);
                     }
                 })());
             
                 await recognizer.startScanning(true);
                 await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
 
-            }catch(ex) {
+            } catch(ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {
                     errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";

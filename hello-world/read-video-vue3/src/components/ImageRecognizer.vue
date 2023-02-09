@@ -1,33 +1,44 @@
-<script setup>
+<script setup lang="ts">
 import { LabelRecognizer } from "dynamsoft-label-recognizer";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, type Ref } from "vue";
 
-const iptRef = ref(null);
-const resRef = ref(null);
-let dlr = ref(null);
+const iptRef: Ref<HTMLInputElement | null> = ref(null);
+const resRef: Ref<HTMLDivElement | null> = ref(null);
+const dlr: Ref<Promise<LabelRecognizer> | null> = ref(null);
 
 onMounted(()=>{
-    dlr = LabelRecognizer.createInstance({runtimeSettings: "mrz"});
+    dlr.value = LabelRecognizer.createInstance({runtimeSettings: "mrz"});
 })
 
 onUnmounted(async()=>{
-    (await dlr).destroyContext();
-    console.log('ImgRecognizer Component Unmount');
+    (await dlr.value)!.destroyContext();
+    console.log('ImageRecognizer Component Unmount');
 })
 
-const recognizeImg = async (e) => {
-    resRef.value.innerText = "";
-    const recognizer = await dlr;
-    const results = await recognizer.recognize(e.target.files[0]);
-    const res = [];
-    for(let result of results){
-        for(let line of result.lineResults) {
-            console.log(line.text);
-            res.push(line.text);
-        } 
+const recognizeImg = async (e: any) => {
+    try {
+        resRef.value!.innerText = "";
+        const recognizer = await dlr.value;
+        const results = await recognizer!.recognize(e.target.files[0]);
+        const res = [];
+        for(let result of results){
+            for(let line of result.lineResults) {
+                console.log(line.text);
+                res.push(line.text);
+            } 
+        }
+        resRef.value!.innerText = res.join("\n");
+        iptRef.value!.value = '';
+    } catch(ex:any) {
+        let errMsg: string;
+        if (ex.message.includes("network connection error")) {
+            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+        } else {
+            errMsg = ex.message||ex;
+        }
+        console.error(errMsg);
+        alert(errMsg);
     }
-    resRef.value.innerText = res.join("\n");
-    iptRef.value.value = '';
 }
 </script>
 
@@ -56,6 +67,5 @@ const recognizeImg = async (e) => {
 
 .recognize-img .result-area {
   margin-top: 20px;
-  
 }
 </style>

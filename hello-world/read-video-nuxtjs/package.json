@@ -1,17 +1,18 @@
 {
-    "name": "dlrjs-nuxtjs-sample",
-    "version": "2.2.30",
-    "private": true,
-    "scripts": {
-        "dev": "nuxt",
-        "build": "nuxt build",
-        "start": "nuxt start",
-        "generate": "nuxt generate"
-    },
-    "dependencies": {
-        "core-js": "^3.15.1",
-        "dynamsoft-camera-enhancer": "3.0.1",
-        "dynamsoft-label-recognizer": "2.2.11",
-        "nuxt": "^2.15.7"
-    }
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "nuxt": "^3.1.2"
+  },
+  "dependencies": {
+    "dynamsoft-camera-enhancer": "^3.2.0",
+    "dynamsoft-label-recognizer": "^2.2.30-iv-202301162358"
+  }
 }

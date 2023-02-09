@@ -1,48 +1,64 @@
-<script setup>
-import { onMounted, onUnmounted, ref} from "vue";
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref, type Ref} from "vue";
 import {CameraEnhancer, DrawingItem} from "dynamsoft-camera-enhancer";
 import {LabelRecognizer} from "dynamsoft-label-recognizer";
 
-const elRef = ref(null);
-let dce = ref(null);
-let dlr = ref(null);
+const elRef: Ref<HTMLDivElement | null> = ref(null);
+const dce: Ref<Promise<CameraEnhancer> | null> = ref(null);
+const dlr: Ref<Promise<LabelRecognizer> | null> = ref(null);
 
 onMounted(async()=>{
     LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-    LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);};
+    LabelRecognizer.onResourcesLoadProgress = (resourcesPath?:string, progress?:{ loaded:number, total:number })=>{console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);};
     LabelRecognizer.onResourcesLoaded = async () => { console.log('load ended...');}
-    const cameraEnhancer = await (dce = CameraEnhancer.createInstance());
-    const recognizer = await (dlr = LabelRecognizer.createInstance()) ;
-    await cameraEnhancer.setUIElement(elRef.value);
-    await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
-    await recognizer.updateRuntimeSettingsFromString("video-mrz");
-    cameraEnhancer.setVideoFit("cover");
-    recognizer.onImageRead = async results => {
-        for (let result of results) {
-            for (let lineResult of result.lineResults) {
-                console.log("Image Read: ", lineResult.text);
+
+    try{
+        const cameraEnhancer = await (dce.value = CameraEnhancer.createInstance());
+        const recognizer = await (dlr.value = LabelRecognizer.createInstance()) ;
+        await cameraEnhancer.setUIElement(elRef.value as HTMLDivElement);
+        await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
+        await recognizer.updateRuntimeSettingsFromString("video-mrz");
+        cameraEnhancer.setVideoFit("cover");
+        // Triggered when the video frame is recognized
+        recognizer.onImageRead = (results) => {
+            for (let result of results) {
+                for (let lineResult of result.lineResults) {
+                    console.log("Image Read: ", lineResult.text);
+                }
             }
+        };
+
+        // Triggered when a different result is recognized
+        recognizer.onUniqueRead = (txt) => {
+            alert(txt);
+            console.log("Unique Code Found: " + txt);
         }
-    }
-    
-    recognizer.onUniqueRead = (txt, results) => {
-        alert(txt);
-        console.log("Unique Code Found: ", txt, results);
-    }
 
-    recognizer.onMRZRead = async (txt, results) => {
-        console.log("MRZ results: ", txt, results);
-    }
+        // Callback to MRZ recognizing result
+        recognizer.onMRZRead = async (txt, results) => {
+            console.log("MRZ results: \n", txt, "\n", results);
+        }
 
-    recognizer.onVINRead = (txt, results) => {
-        console.log("VIN results: ",txt, results);
+        // Callback to VIN recognizing result
+        recognizer.onVINRead = (txt, results) => {
+            console.log("VIN results: ",txt, results);
+        }
+        await recognizer.startScanning(true);
+    } catch(ex:any) {
+        let errMsg: string;
+        if (ex.message.includes("network connection error")) {
+            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+        } else {
+            errMsg = ex.message||ex;
+        }
+        console.error(errMsg);
+        alert(errMsg);
     }
-    await recognizer.startScanning(true);
 })
 
 onUnmounted(async() => {
-    (await dlr).destroyContext();
-    (await dce).dispose();
+    (await dlr.value)!.destroyContext();
+    (await dce.value)!.dispose(true);
     console.log('VideoRecognizer Component Unmount');
 })
 </script>

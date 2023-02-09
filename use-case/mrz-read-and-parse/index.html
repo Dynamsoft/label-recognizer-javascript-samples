@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MRZ Read And Parse</title>
-  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js"></script>
 </head>
 <body>
   <h1 style="font-size: 1.5em;">Recognize MRZ from a Camera</h1>
@@ -31,27 +31,10 @@
      * For more information, see https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest#specify-the-license or contact support@dynamsoft.com.
      * LICENSE ALERT - THE END 
      */
-    (async()=>{
-      try{
-        await Dynamsoft.DLR.LabelRecognizer.loadWasm();
-      }catch {
-        let errMsg;
-        if (ex.message.includes("network connection error")) {
-            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-        } else {
-            errMsg = ex.message||ex;
-        }
-        console.error(errMsg);
-        alert(errMsg);
-      }
-    })();
 
     document.getElementById('btn-open-recognize').addEventListener('click', async () => {
       try {
         await (promiseDLRReady = promiseDLRReady || (async () => {
-          cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-
-          recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcePath, progress) => {
             // In this event handler, you can display the loading progress of the model file.
             document.querySelector('#model-loading').innerHTML = "Model Loading..." + " " + (progress.loaded / progress.total).toFixed(2)*100 + "%";
@@ -63,6 +46,8 @@
           cameraEnhancer.on("cameraClose", () => {
             document.querySelector("#mrz-results").innerHTML = '';
           });
+          cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+          recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
           await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
           await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
@@ -93,9 +78,9 @@
       } catch(ex) {
         let errMsg;
         if (ex.message.includes("network connection error")) {
-            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+          errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
         } else {
-            errMsg = ex.message||ex;
+          errMsg = ex.message||ex;
         }
         console.error(errMsg);
         alert(errMsg);

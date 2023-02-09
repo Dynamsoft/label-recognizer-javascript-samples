@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImageRecognizerComponent } from './image-recognizer.component';
 
-describe('HelloWorldComponent', () => {
+describe('ImageRecognizerComponent', () => {
   let component: ImageRecognizerComponent;
   let fixture: ComponentFixture<ImageRecognizerComponent>;
 
@@ -11,9 +11,7 @@ describe('HelloWorldComponent', () => {
       declarations: [ ImageRecognizerComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImageRecognizerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

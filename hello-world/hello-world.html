@@ -7,8 +7,8 @@
     <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (recognizing via Camera)</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -59,14 +59,13 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = (txt, results) => {
-                        console.log("MRZ text: ",txt);
-                        console.log("MRZ results: ", results);
+                    recognizer.onMRZRead = async (txt, results) => {
+                        console.log("MRZ results: \n", txt, "\n", results);
                     }
 
                     // Callback to VIN recognizing result
-                    recognizer.onVINRead = (txt) => {
-                        console.log("VIN results: ",txt);
+                    recognizer.onVINRead = (txt, results) => {
+                        console.log("VIN results: ",txt, results);
                     }
                 })());
 

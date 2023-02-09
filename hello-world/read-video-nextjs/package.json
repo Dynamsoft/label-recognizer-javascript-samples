@@ -1,22 +1,23 @@
 {
-    "name": "dlrjs-nextjs-sample",
-    "version": "2.2.30",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
-    },
-    "dependencies": {
-        "dynamsoft-camera-enhancer": "3.0.1",
-        "dynamsoft-label-recognizer": "2.2.11",
-        "next": ">=12.1.0",
-        "react": "17.0.2",
-        "react-dom": "17.0.2"
-    },
-    "devDependencies": {
-        "eslint": "7.32.0",
-        "eslint-config-next": "11.1.2"
-    }
+  "name": "dlrjs-nextjs-sample",
+  "version": "2.2.30",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "13.1.6",
+    "@types/node": "18.11.19",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "dynamsoft-camera-enhancer": "^3.2.0",
+    "dynamsoft-label-recognizer": "^2.2.30-iv-202301162358",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "4.9.5"
+  }
 }

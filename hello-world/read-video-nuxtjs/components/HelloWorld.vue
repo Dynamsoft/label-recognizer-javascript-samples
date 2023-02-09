@@ -1,91 +1,66 @@
+<script setup lang="ts">
+import { ref, type Ref } from "vue";
+import VideoRecognizer from "./VideoRecognizer.vue";
+import ImageRecognizer from "./ImageRecognizer.vue";
+
+const mode: Ref<string> = ref("video");
+</script>
+
 <template>
-  <div class="helloWorld">
-    <h1>Hello World for Nuxtjs</h1>
-    <div id="UIElement">
-      <div class="btn-group" v-if="libLoaded">
-        <button :style="{marginRight: '10px', backgroundColor: bShowRecognizer ? 'rgb(255,174,55)' : 'white'}" @click="showRecognizer">Video Recognizer</button>
-        <button :style="{backgroundColor: bShowImgRecognize ? 'rgb(255,174,55)' : 'white'}" @click="showImgRecognize">Image Recognizer</button>
-      </div>
-      <span style="font-size: x-large" v-if="!libLoaded">Loading Library...</span>
-      <VideoRecognizer v-if="bShowRecognizer"></VideoRecognizer>
-      <ImgRecognizer v-if="bShowImgRecognize"></ImgRecognizer>
+  <div class='App'>
+    <div class='title'>
+      <h2 class='title-text'>Hello World for NUXTJS</h2>
+      <img class='title-logo' src="../assets/logo.svg" alt="logo" />
     </div>
+    <div class='top-btns'>
+      <button @click="mode = 'video'" :style="{ backgroundColor: mode === 'video' ? 'rgb(255, 174, 55)' : '#FFFFFF' }">VideoRecognizer</button>
+      <button @click="mode = 'image'" :style="{ backgroundColor: mode === 'image' ? 'rgb(255, 174, 55)' : '#FFFFFF' }">ImageRecognizer</button>
+    </div>
+    <VideoRecognizer v-if="mode === 'video'"/> 
+    <ImageRecognizer v-else/>
   </div>
 </template>
 
-<script>
-import { LabelRecognizer } from "dynamsoft-label-recognizer";
-import VideoRecognizer from "./VideoRecognizer";
-import ImgRecognizer from './ImgRecognizer.vue'
-
-export default {
-  name: "HelloWorld",
-  components: {
-    VideoRecognizer, ImgRecognizer
-  },
-  data() {
-    return {
-      libLoaded: false,
-      bShowRecognizer: true,
-      bShowImgRecognize: false
-    };
-  },
-  async mounted() {
-    try {
-      //Load the library on page load to speed things up.
-      await LabelRecognizer.loadWasm();
-      this.libLoaded = true;
-      this.showRecognizer();
-    } catch (ex) {
-      let errMsg;
-      if (ex.message.includes("network connection error")) {
-          errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-      } else {
-          errMsg = ex.message||ex;
-      }
-      console.error(errMsg);
-      alert(errMsg);
-    }
-  },
-  methods: {
-    showRecognizer() {
-      this.bShowRecognizer = true;
-      this.bShowImgRecognize = false;
-    },
-    showImgRecognize() {
-      this.bShowRecognizer = false;
-      this.bShowImgRecognize = true;
-    }
-  },
-};
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.helloWorld {
+.title {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: #455a64;
+  align-items: center;
+  margin-top: 50px;
 }
-h1 {
-  font-size: 1.5em;
+.title .title-logo {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
 }
-#UIElement {
-  margin: 2vmin auto;
-  text-align: center;
-  font-size: medium;
-  height: 40vh;
-  width: 80vw;
+
+.top-btns {
+  width: 30%;
+  margin: 20px auto;
 }
-button {
-  font-size: 1.5rem;
-  margin: 1.5vh 0;
+
+.top-btns button {
+  display: inline-block;
   border: 1px solid black;
-  background-color: white;
-  color: black;
+  padding: 5px 15px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.top-btns button:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-right: transparent;
+}
+.top-btns button:nth-child(2) {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-left: transparent;
+}
+
+@media screen and (max-width: 500px) {
+  .top-btns {
+    width: 70%;
+  }
 }
 </style>

@@ -1,10 +1,10 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, type Ref } from "vue";
 import vueLogo from "./assets/logo.svg";
 import VideoRecognizer from "./components/VideoRecognizer.vue";
 import ImageRecognizer from "./components/ImageRecognizer.vue";
 
-const mode = ref("video");
+const mode: Ref<string> = ref("video");
 </script>
 
 <template>
@@ -29,10 +29,6 @@ const mode = ref("video");
   align-items: center;
   margin-top: 50px;
 }
-
-/* .title .title-text {
-
-  } */
 .title .title-logo {
   width: 30px;
   height: 30px;

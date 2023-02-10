@@ -12,7 +12,7 @@ function ImageRecognizer() {
 
         return async () => {
             (await dlr.current)!.destroyContext();
-            console.log('ImgRecognizer Component Unmount');
+            console.log('ImageRecognizer Component Unmount');
         }
     }, []);
 

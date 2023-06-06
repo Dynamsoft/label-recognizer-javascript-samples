@@ -14,12 +14,15 @@
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <button id="btn-open-recognize">Open Label Recognizer</button>
-    <div id="div-ui-container" style="margin-top: 50px;height: 700px;">
-    </div>
+    <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading... Please wait</span>
+    <div id="div-ui-container" style="margin-top: 50px;height: 700px;"></div>
     <script>
         let recognizer = null;
         let cameraEnhancer = null;
         let promiseDLRReady;
+
+        const openRecognize = document.getElementById('btn-open-recognize');
+        const textLoading = document.querySelector("#text-loading");
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -32,11 +35,11 @@
          * LICENSE ALERT - THE END 
          */
 
-        document.getElementById('btn-open-recognize').onclick = async function() {
+         openRecognize.onclick = async function() {
             try {
                 await (promiseDLRReady = promiseDLRReady || (async() => {
+                    textLoading.style.display = "inline";
                     cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-    
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
                     await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
                     await recognizer.updateRuntimeSettingsFromString("video-mrz");
@@ -70,6 +73,7 @@
                 })());
 
                 await recognizer.startScanning(true);
+                textLoading.style.display = "none";
             } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {

@@ -24,12 +24,15 @@
         <option value="video-numberUpperCase">numberUpperCase</option>
         <option value="video-letter">letter</option>
     </select>
-    <button id="btn-open-recognizer">Open Label Recognizer</button>
+    <button id="btn-open-recognizer" style="margin-right: 10px;">Open Label Recognizer</button>
+    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
     <div id="div-ui-container" style="margin-top: 50px; height: 75vh;"></div>
     <script>       
         let recognizer = null;
         let cameraEnhancer = null;
         let promiseDLRReady;
+
+        const textLoading = document.getElementById("text-loading");
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -56,7 +59,7 @@
 
                 // create an instance only once
                 await (promiseDLRReady = promiseDLRReady || (async() => {
-
+                    textLoading.style.display = "inline";
                     cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
 
                     // callback of resources loading
@@ -98,8 +101,8 @@
                 })());
             
                 await recognizer.startScanning(true);
+                textLoading.style.display = "none";
                 await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
-
             }catch(ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {

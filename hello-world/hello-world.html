@@ -13,8 +13,8 @@
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <button id="btn-open-recognize">Open Label Recognizer</button>
-    <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading... Please wait</span>
+    <button id="btn-open-recognize" style="margin-right: 10px;">Open Label Recognizer</button>
+    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
     <div id="div-ui-container" style="margin-top: 50px;height: 700px;"></div>
     <script>
         let recognizer = null;
@@ -22,7 +22,7 @@
         let promiseDLRReady;
 
         const openRecognize = document.getElementById('btn-open-recognize');
-        const textLoading = document.querySelector("#text-loading");
+        const textLoading = document.getElementById("text-loading");
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.

@@ -11,7 +11,8 @@
 
 <body>
     <h1 style="font-size: 1.5em;">Hello World for RequireJS</h1>
-    <button id="recognizeLabel">Open Label Recognizer</button>
+    <button id="btn-open-recognize" style="margin-right: 10px;">Open Label Recognizer</button>
+    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
     <div id="div-ui-container" style="margin-top: 50px;width:100%;height:75vh;"></div>
     <script>
         requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js'], function(
@@ -36,9 +37,13 @@
             let cameraEnhancer = null;
             let promiseDLRReady;
 
-            document.getElementById('recognizeLabel').onclick = async function() {
+            const openRecognize = document.getElementById('btn-open-recognize');
+            const textLoading = document.getElementById("text-loading");
+
+            openRecognize.onclick = async function() {
                 try {
                     await (promiseDLRReady = promiseDLRReady || (async() => {
+                        textLoading.style.display = "inline";
                         cameraEnhancer = await DCE.CameraEnhancer.createInstance();
                         DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
                         DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
@@ -79,6 +84,7 @@
                     })());
 
                     await recognizer.startScanning(true);
+                    textLoading.style.display = "none";
                 } catch (ex) {
                     let errMsg;
                     if (ex.message.includes("network connection error")) {

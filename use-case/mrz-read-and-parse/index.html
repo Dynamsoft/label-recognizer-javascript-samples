@@ -50,7 +50,6 @@
       try {
         await (promiseDLRReady = promiseDLRReady || (async () => {
           cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-
           recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcePath, progress) => {
             // In this event handler, you can display the loading progress of the model file.

@@ -2,9 +2,9 @@
 
 This repository contains multiple samples that demonstrate how to use [Dynamsoft Lable Recognizer JavaScript Edition](https://www.dynamsoft.com/label-recognition/programming/javascript/?ver=latest).
 
-[User Guide](https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest)
+- [User Guide](https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest)
 
-[API Reference](https://www.dynamsoft.com/label-recognition/programming/javascript/api-reference/?ver=latest)
+- [API Reference](https://www.dynamsoft.com/label-recognition/programming/javascript/api-reference/?ver=latest)
 
 ## Hello World
 
@@ -25,13 +25,13 @@ Learn how to get the basic features of the library working with plain/native Jav
 
 ## Use Cases
 
-Use cases of the library.
+Use cases of the library:
 
-1. **Use Templates**: In this sample, you can select a specific template and open the camera to recognize the label.
+1. **Use Templates**: Select a specific template and open the camera for text recognition. Available templates include number, letter, passportMRZ, visaMRZ, MRZ, VIN etc. 
 
-2. **Read and Parse MRZ**: This sample demonstrates the most popular use case of the SDK which is to read and parse the machine-readable zones (MRZ) usually found on passports, VISAs, etc.
+2. **Read and Parse MRZ**: Read and parse the machine-readable zones (MRZ) usually found on passports, VISAs, etc. 
 
-> For a more complex sample, check out the [source code for the Label Recognizer Demo](https://github.com/Dynamsoft/label-recognizer-javascript-demo).
+   You can also [try the MRZ scanning online demo](https://demo.dynamsoft.com/label-recognizer-js/mrz-scanner.html).
 
 ## Contact Us
 

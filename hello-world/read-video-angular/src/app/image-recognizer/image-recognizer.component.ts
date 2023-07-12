@@ -1,32 +1,36 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {LabelRecognizer} from 'dynamsoft-label-recognizer';
+import { Component, ViewChild } from '@angular/core';
+import { LabelRecognizer } from 'dynamsoft-label-recognizer';
 
 @Component({
   selector: 'app-image-recognizer',
   templateUrl: './image-recognizer.component.html',
   styleUrls: ['./image-recognizer.component.css']
 })
-export class ImageRecognizerComponent implements OnInit {
-  pRecognizer = null;
+export class ImageRecognizerComponent {
+  dlr: Promise<LabelRecognizer> | null = null;
 
-  @ViewChild('ipt') ipt: any;
+  @ViewChild('iptRef') iptRef: any;
+  @ViewChild('resRef') resRef: any;
 
-  async ngOnInit(): Promise<void> {
-    await (this.pRecognizer = LabelRecognizer.createInstance({runtimeSettings: "numberletter"}));
+  ngOnInit(): void {
+    this.dlr = LabelRecognizer.createInstance({runtimeSettings: "mrz"});
   }
 
   recognizeImg = async (e: any) => {
     try {
-      const recognizer = await this.pRecognizer;
-      const results = await recognizer.recognize(e.target.files[0]);
+      this.iptRef.nativeElement.innerText = "";
+      const recognizer = await this.dlr;
+      const results = await recognizer!.recognize(e.target.files[0]);
+      const res = [];
       for(let result of results){
         for(let line of result.lineResults) {
-          alert(line.text);
           console.log(line.text);
+          res.push(line.text);
         }
       }
-      (this as any).ipt.nativeElement.value = '';
-    } catch (ex) {
+      this.resRef.nativeElement!.innerText = res.join("\n");
+      this.iptRef.nativeElement!.value = '';
+    } catch(ex: any) {
       let errMsg: string;
       if (ex.message.includes("network connection error")) {
         errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
@@ -39,9 +43,7 @@ export class ImageRecognizerComponent implements OnInit {
   }
 
   async ngOnDestroy() {
-    if (this.pRecognizer) {
-      (await this.pRecognizer).destroyContext();
-      console.log('ImgRecognizer Component Unmount');
-    }
+    (await this.dlr)!.destroyContext();
+    console.log('ImageRecognizer Component Unmount');
   }
 }

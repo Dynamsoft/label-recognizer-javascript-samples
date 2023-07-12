@@ -1,1 +1,4 @@
-<div class="recognizeImg"><input type="file" (change)="recognizeImg($event)" #ipt/></div>
+<div class="recognize-img">
+  <div class="img-ipt"><input type="file" #iptRef (change)="recognizeImg($event)"/></div>
+  <div class="result-area" #resRef></div>
+</div>

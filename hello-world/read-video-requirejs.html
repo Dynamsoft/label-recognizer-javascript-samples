@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -11,20 +10,17 @@
 
 <body>
     <h1 style="font-size: 1.5em;">Hello World for RequireJS</h1>
-    <button id="btn-open-recognize" style="margin-right: 10px;">Open Label Recognizer</button>
-    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
+    <button id="recognizeLabel">Open Label Recognizer</button>
     <div id="div-ui-container" style="margin-top: 50px;width:100%;height:75vh;"></div>
     <script>
-        requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js'], function(
-            DLR, DCE
-        ) {
-            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/";
-            DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/"
+        requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js'], function(DLR, DCE) {
+            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/";
+            DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/"
 
             /** LICENSE ALERT - README 
              * To use the library, you need to first specify a license key using the API "license" as shown below.
              */
-            DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+            DLR.LabelRecognizer.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAxNTgyODI4LVRYbFhaV0pRY205cVgyUnNjZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAxNTgyODI4IiwiY2hlY2tDb2RlIjotMTMxMTk0NDg3OX0=";
             /** 
              * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
              * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
@@ -32,27 +28,20 @@
              * LICENSE ALERT - THE END 
              */
             
-            
             let recognizer = null;
             let cameraEnhancer = null;
             let promiseDLRReady;
 
-            const openRecognize = document.getElementById('btn-open-recognize');
-            const textLoading = document.getElementById("text-loading");
-
-            openRecognize.onclick = async function() {
+            document.getElementById('recognizeLabel').onclick = async function() {
                 try {
                     await (promiseDLRReady = promiseDLRReady || (async() => {
-                        textLoading.style.display = "inline";
-                        cameraEnhancer = await DCE.CameraEnhancer.createInstance();
                         DLR.LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-                        DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
-                            console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);
-                        };
+                        DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);};
                         DLR.LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
+                        cameraEnhancer = await DCE.CameraEnhancer.createInstance();
                         recognizer = await DLR.LabelRecognizer.createInstance();
                         await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DCE.DrawingItem});
-                        await recognizer.updateRuntimeSettingsFromString("video-numberletter");
+                        await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
                         await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 
@@ -60,7 +49,7 @@
                         recognizer.onImageRead = (results) => {
                             for (let result of results) {
                                 for (let lineResult of result.lineResults) {
-                                    console.log("Imaage Read: ", lineResult.text);
+                                    console.log("Image Read: ", lineResult.text);
                                 }
                             }
                         };
@@ -72,19 +61,17 @@
                         }
 
                         // Callback to MRZ recognizing result
-                        recognizer.onMRZRead = (txt, results) => {
-                            console.log("MRZ text: ",txt);
-                            console.log("MRZ results: ", results);
+                        recognizer.onMRZRead = async (txt, results) => {
+                            console.log("MRZ results: \n", txt, "\n", results);
                         }
 
                         // Callback to VIN recognizing result
-                        recognizer.onVINRead = (txt) => {
-                            console.log("VIN results: ",txt);
+                        recognizer.onVINRead = (txt, results) => {
+                            console.log("VIN results: ",txt, results);
                         }
                     })());
 
                     await recognizer.startScanning(true);
-                    textLoading.style.display = "none";
                 } catch (ex) {
                     let errMsg;
                     if (ex.message.includes("network connection error")) {

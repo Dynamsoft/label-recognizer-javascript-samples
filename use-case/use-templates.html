@@ -82,7 +82,7 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = async (txt, results) => {
+                    recognizer.onMRZRead = (txt, results) => {
                         console.log("MRZ results: \n", txt, "\n", results);
                     }
 

@@ -43,10 +43,10 @@
             // In this event handler, you can close the visual cue if it was displayed.
             document.querySelector('#model-loading').innerHTML = "";
           };
+          cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
           cameraEnhancer.on("cameraClose", () => {
             document.querySelector("#mrz-results").innerHTML = '';
           });
-          cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
           recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
           await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
           await recognizer.updateRuntimeSettingsFromString("video-mrz");

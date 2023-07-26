@@ -8,13 +8,13 @@
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (recognizing via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/dlr.js"></script>
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <button id="btn-open-recognize" style="margin-right: 10px;">Open Label Recognizer</button>
-    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
+    <button id="btn-open-recognize">Open Label Recognizer</button>
+    <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading... Please wait</span>
     <div id="div-ui-container" style="margin-top: 50px;height: 700px;"></div>
     <script>
         let recognizer = null;
@@ -22,7 +22,7 @@
         let promiseDLRReady;
 
         const openRecognize = document.getElementById('btn-open-recognize');
-        const textLoading = document.getElementById("text-loading");
+        const textLoading = document.querySelector("#text-loading");
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.

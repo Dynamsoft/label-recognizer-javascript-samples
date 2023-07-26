@@ -7,8 +7,8 @@
     <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in a PWA application.">
     <meta name="keywords" content="recognize label from camera in PWA">
     <title>Dynamsoft Label Recognizer PWA Sample - Hello World (recognizing via Camera)</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/dlr.js"></script>
     <link rel="manifest" href="./helloworld-pwa.json">
 </head>
 
@@ -45,7 +45,7 @@
                     recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
 
                     await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
-                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+                    await recognizer.updateRuntimeSettingsFromString("video-mrz");
     
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
                     
@@ -65,14 +65,13 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = (txt, results) => {
-                        console.log("MRZ text: ",txt);
-                        console.log("MRZ results: ", results);
+                    recognizer.onMRZRead = async (txt, results) => {
+                        console.log("MRZ results: \n", txt, "\n", results);
                     }
 
                     // Callback to VIN recognizing result
-                    recognizer.onVINRead = (txt) => {
-                        console.log("VIN results: ",txt);
+                    recognizer.onVINRead = (txt, results) => {
+                        console.log("VIN results: ",txt, results);
                     }
                 })());
 

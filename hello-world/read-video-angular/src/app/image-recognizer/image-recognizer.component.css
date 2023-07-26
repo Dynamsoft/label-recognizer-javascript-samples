@@ -1,8 +1,18 @@
-.recognizeImg {
+.recognize-img {
+  width: 100%;
+  height: 100%;
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+
+.recognize-img .img-ipt {
+  width: 80%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 90%;
-  border: 1px solid black
+  border: 1px solid black;
+  margin: 0 auto;
+}
+
+.recognize-img .result-area {
+  margin-top: 20px;
 }

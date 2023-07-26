@@ -2,8 +2,8 @@ let recognizer = null;
 let cameraEnhancer = null;
 let promiseDLRReady;
 
-Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/"; 
-Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/";
+Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/"; 
+Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/";
 
 /** LICENSE ALERT - README 
  * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -23,9 +23,9 @@ document.getElementById('recognizeLabel').onclick = async () => {
 
             recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
             await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
-            await recognizer.updateRuntimeSettingsFromString("video-numberletter");
+            await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
-            await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
+            document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
             
             // Triggered when the video frame is recognized
             recognizer.onImageRead = (results) => {
@@ -43,14 +43,13 @@ document.getElementById('recognizeLabel').onclick = async () => {
             }
 
             // Callback to MRZ recognizing result
-            recognizer.onMRZRead = (txt, results) => {
-                console.log("MRZ text: ",txt);
-                console.log("MRZ results: ", results);
+            recognizer.onMRZRead = async (txt, results) => {
+                console.log("MRZ results: \n", txt, "\n", results);
             }
 
             // Callback to VIN recognizing result
-            recognizer.onVINRead = (txt) => {
-                console.log("VIN results: ",txt);
+            recognizer.onVINRead = (txt, results) => {
+                console.log("VIN results: ",txt, results);
             }
         })());
 

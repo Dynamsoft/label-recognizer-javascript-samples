@@ -9,15 +9,14 @@
 </head>
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
-    <button id="btn-open-recognize" style="margin-right: 10px;">Open Label Recognizer</button>
-    <span id="text-loading" style="display: none; color: red;vertical-align: middle;">Loading... Please wait</span>
+    <button id="btn-open-recognize">Open Label Recognizer</button>
     <div id="div-ui-container" style="margin-top: 50px;width: 100%; height: 75vh;"></div>
     <script type="module">
-        import { CameraEnhancer, DrawingItem } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/dce.mjs';
-        import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/dlr.mjs'; 
+        import { CameraEnhancer, DrawingItem } from 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.mjs';
+        import { LabelRecognizer } from 'https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/dlr.mjs'; 
 
-        LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.11/dist/"; 
-        CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.0.1/dist/";
+        LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/"; 
+        CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/";
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
@@ -33,14 +32,9 @@
         let recognizer = null;
         let cameraEnhancer = null;
         let promiseDLRReady;
-
-        const openRecognize = document.getElementById('btn-open-recognize');
-        const textLoading = document.getElementById("text-loading");
-
-        openRecognize.addEventListener('click', async () => {
+        document.getElementById('btn-open-recognize').addEventListener('click', async () => {
             try {
                 await (promiseDLRReady = promiseDLRReady || (async() => {
-                    textLoading.style.display = "inline";
                     cameraEnhancer = await CameraEnhancer.createInstance();
                     LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
                     LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{
@@ -49,7 +43,7 @@
                     LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
                     recognizer = await LabelRecognizer.createInstance();
                     await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
-                    await recognizer.updateRuntimeSettingsFromString("video-numberLetter");
+                    await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
                     await document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
 
@@ -69,18 +63,16 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = (txt, results) => {
-                        console.log("MRZ text: ",txt);
-                        console.log("MRZ results: ", results);
+                    recognizer.onMRZRead = async (txt, results) => {
+                        console.log("MRZ results: \n", txt, "\n", results);
                     }
 
                     // Callback to VIN recognizing result
-                    recognizer.onVINRead = (txt) => {
-                        console.log("VIN results: ",txt);
+                    recognizer.onVINRead = (txt, results) => {
+                        console.log("VIN results: ",txt, results);
                     }
                 })());
                 await recognizer.startScanning(true);
-                textLoading.style.display = "none";
             } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {

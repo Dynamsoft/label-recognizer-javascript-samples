@@ -13,14 +13,14 @@
     <button id="recognizeLabel">Open Label Recognizer</button>
     <div id="div-ui-container" style="margin-top: 50px;width:100%;height:75vh;"></div>
     <script>
-        requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js'], function(DLR, DCE) {
-            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/";
+        requirejs(['https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/dlr.js', 'https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js'], function(DLR, DCE) {
+            DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/";
             DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/"
 
             /** LICENSE ALERT - README 
              * To use the library, you need to first specify a license key using the API "license" as shown below.
              */
-            DLR.LabelRecognizer.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAxNTgyODI4LVRYbFhaV0pRY205cVgyUnNjZyIsIm9yZ2FuaXphdGlvbklEIjoiMTAxNTgyODI4IiwiY2hlY2tDb2RlIjotMTMxMTk0NDg3OX0=";
+            DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
             /** 
              * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
              * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.

@@ -8,7 +8,7 @@
     <meta name="keywords" content="label recognizing in diffierent templates">
     <title>use-templates</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.2.0/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30-iv-202301162358/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/dlr.js"></script>
 </head>
 
 <body>
@@ -17,6 +17,7 @@
         <option value="video-numberLetter">numberLetter</option>
         <option value="video-passportMRZ">passportMRZ</option>
         <option value="video-visaMRZ">visaMRZ</option>
+        <option value="video-idcardMRZ">idcardMRZ</option>
         <option value="video-MRZ">MRZ</option>
         <option value="video-VIN_NA">VIN_NA</option>
         <option value="video-VIN">VIN</option>
@@ -82,7 +83,7 @@
                     }
 
                     // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = async (txt, results) => {
+                    recognizer.onMRZRead = (txt, results) => {
                         console.log("MRZ results: \n", txt, "\n", results);
                     }
 

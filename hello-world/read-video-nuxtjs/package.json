@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "dynamsoft-camera-enhancer": "^3.2.0",
-    "dynamsoft-label-recognizer": "^2.2.30-iv-202301162358"
+    "dynamsoft-label-recognizer": "2.2.30"
   }
 }

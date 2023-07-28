@@ -3,29 +3,29 @@ import { CameraEnhancer, DrawingItem } from 'dynamsoft-camera-enhancer';
 import { LabelRecognizer } from 'dynamsoft-label-recognizer';
 
 function VideoRecognizer() {
-    const elRef: MutableRefObject<HTMLDivElement|null> = useRef(null);
+    const elRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
-    const dce: MutableRefObject<Promise<CameraEnhancer>|null> = useRef(null);
-    const dlr: MutableRefObject<Promise<LabelRecognizer>|null> = useRef(null);
+    const dce: MutableRefObject<Promise<CameraEnhancer> | null> = useRef(null);
+    const dlr: MutableRefObject<Promise<LabelRecognizer> | null> = useRef(null);
     useEffect((): any => {
         const init = async () => {
             LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-            LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);};
-            LabelRecognizer.onResourcesLoaded = async () => { console.log('load ended...');}
+            LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress) => { console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total); };
+            LabelRecognizer.onResourcesLoaded = async () => { console.log('load ended...'); }
             try {
                 const cameraEnhancer = await (dce.current = CameraEnhancer.createInstance());
-                const recognizer = await (dlr.current = LabelRecognizer.createInstance()) ;
+                const recognizer = await (dlr.current = LabelRecognizer.createInstance());
                 await cameraEnhancer.setUIElement(elRef.current as HTMLDivElement);
-                await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
+                await recognizer.setImageSource(cameraEnhancer, { resultsHighlightBaseShapes: DrawingItem });
                 await recognizer.updateRuntimeSettingsFromString("video-mrz");
                 cameraEnhancer.setVideoFit("cover");
 
                 // Triggered when the video frame is recognized
                 recognizer.onImageRead = (results) => {
                     for (let result of results) {
-                    for (let lineResult of result.lineResults) {
-                        console.log("Image Read: ", lineResult.text);
-                    }
+                        for (let lineResult of result.lineResults) {
+                            console.log("Image Read: ", lineResult.text);
+                        }
                     }
                 };
 
@@ -42,16 +42,16 @@ function VideoRecognizer() {
 
                 // Callback to VIN recognizing result
                 recognizer.onVINRead = (txt, results) => {
-                    console.log("VIN results: ",txt, results);
+                    console.log("VIN results: ", txt, results);
                 }
-                
+
                 await recognizer.startScanning(true);
-            } catch(ex:any) {
+            } catch (ex: any) {
                 let errMsg: string;
                 if (ex.message.includes("network connection error")) {
                     errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
                 } else {
-                    errMsg = ex.message||ex;
+                    errMsg = ex.message || ex;
                 }
                 console.error(errMsg);
                 alert(errMsg);
@@ -60,8 +60,8 @@ function VideoRecognizer() {
         init();
 
         return async () => {
-            if(dlr.current) {
-                (await dlr.current)!.destroyContext();
+            if (dlr.current) {
+                (await dlr.current).destroyContext();
                 (await dce.current)!.dispose(true);
                 console.log('VideoRecognizer Component Unmount');
             }

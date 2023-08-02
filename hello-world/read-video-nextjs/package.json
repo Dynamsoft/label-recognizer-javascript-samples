@@ -1,6 +1,6 @@
 {
   "name": "dlrjs-nextjs-sample",
-  "version": "2.2.30",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

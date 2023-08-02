@@ -1,6 +1,6 @@
 {
     "name": "dlrjs-vue2-sample",
-    "version": "2.2.30",
+    "version": "0.0.0",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",

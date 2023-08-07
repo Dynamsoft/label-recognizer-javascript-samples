@@ -1,6 +1,6 @@
 import { LabelRecognizer } from "dynamsoft-label-recognizer";
 
-LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.30/dist/";
+LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.31/dist/";
 /** LICENSE ALERT - README 
  * To use the library, you need to first specify a license key using the API "license" as shown below.
  */

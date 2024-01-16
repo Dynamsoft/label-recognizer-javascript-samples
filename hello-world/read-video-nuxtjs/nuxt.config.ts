@@ -12,7 +12,7 @@ export default defineNuxtConfig({
                 { name: 'format-detection', content: 'telephone=no' },
                 { name: "description", content: "Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream." },
                 { name: "keywords", content: "camera based label recognizing" }
-    
+
             ],
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

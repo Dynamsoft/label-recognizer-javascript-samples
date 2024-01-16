@@ -11,6 +11,7 @@ import { CapturedResultReceiver, CaptureVisionRouter } from "dynamsoft-capture-v
   styleUrls: ['./video-recognizer.component.css']
 })
 export class VideoRecognizerComponent {
+  pCameraView: Promise<CameraView> | null = null;
   pCameraEnhancer: Promise<CameraEnhancer> | null = null;
   pRouter: Promise<CaptureVisionRouter> | null = null;
 
@@ -29,12 +30,12 @@ export class VideoRecognizerComponent {
         }
       }
       // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
-      const cameraView = await CameraView.createInstance();
-      const cameraEnhancer = await CameraEnhancer.createInstance(cameraView);
+      const cameraView = await (this.pCameraView = CameraView.createInstance());
+      const cameraEnhancer = await (this.pCameraEnhancer = CameraEnhancer.createInstance(cameraView));
       this.uiContainer.nativeElement!.append(cameraView.getUIElement()); // Get default UI and append it to DOM.
 
       // Create a `CaptureVisionRouter` instance and set `CameraEnhancer` instance as its image source.
-      const router = await CaptureVisionRouter.createInstance();
+      const router = await (this.pRouter = CaptureVisionRouter.createInstance());
       router.setInput(cameraEnhancer);
 
       // Define a callback for results.
@@ -76,6 +77,7 @@ export class VideoRecognizerComponent {
   async ngOnDestroy() {
     (await this.pRouter)!.dispose();
     (await this.pCameraEnhancer)!.dispose();
+    (await this.pCameraView)!.dispose();
     console.log('VideoRecognizer Component Unmount');
   }
 }

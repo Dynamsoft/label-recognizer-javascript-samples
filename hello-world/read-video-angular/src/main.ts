@@ -2,8 +2,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 
-import "./dce";
-import "./dlr";
+import "./cvr";
 
 
 platformBrowserDynamic().bootstrapModule(AppModule)

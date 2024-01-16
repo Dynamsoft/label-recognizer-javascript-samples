@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { CameraEnhancer, DrawingItem } from 'dynamsoft-camera-enhancer';
-import { LabelRecognizer } from 'dynamsoft-label-recognizer';
+import { EnumCapturedResultItemType } from "dynamsoft-core";
+import { MultiFrameResultCrossFilter } from "@dynamsoft/dynamsoft-utility";
+import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
+import { LabelRecognizerModule, type RecognizedTextLinesResult } from "@dynamsoft/dynamsoft-label-recognizer";
+import { CapturedResultReceiver, CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 
 @Component({
   selector: 'app-video-recognizer',
@@ -8,55 +11,62 @@ import { LabelRecognizer } from 'dynamsoft-label-recognizer';
   styleUrls: ['./video-recognizer.component.css']
 })
 export class VideoRecognizerComponent {
-  dce: Promise<CameraEnhancer> | null = null;
-  dlr: Promise<LabelRecognizer> | null = null;
+  pCameraEnhancer: Promise<CameraEnhancer> | null = null;
+  pRouter: Promise<CaptureVisionRouter> | null = null;
 
-  @ViewChild('container') container: any;
+  @ViewChild('uiContainer') uiContainer: any;
+  @ViewChild('resultsContainer') resultsContainer: any;
 
   async ngOnInit(): Promise<void> {
-    LabelRecognizer.onResourcesLoadStarted = () => { console.log('load started...'); }
-    LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);};
-    LabelRecognizer.onResourcesLoaded = () => { console.log('load ended...'); }
     try {
-      const cameraEnhancer = await (this.dce = CameraEnhancer.createInstance());
-      const recognizer = await (this.dlr = LabelRecognizer.createInstance());
-      await cameraEnhancer.setUIElement(this.container!.nativeElement);
-      await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: DrawingItem});
-      await recognizer.updateRuntimeSettingsFromString("video-mrz");
-      cameraEnhancer.setVideoFit("cover");
+      LabelRecognizerModule.onModelLoadProgress = (modelPath: string, progress: { loaded: number, total: number }) => {
+        if (progress.loaded === 0) {
+          console.log('load started...');
+        } else if (progress.loaded === progress.total) {
+          console.log('load ended...');
+        } else {
+          console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);
+        }
+      }
+      // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
+      const cameraView = await CameraView.createInstance();
+      const cameraEnhancer = await CameraEnhancer.createInstance(cameraView);
+      this.uiContainer.nativeElement!.append(cameraView.getUIElement()); // Get default UI and append it to DOM.
 
-      // Triggered when the video frame is recognized
-      recognizer.onImageRead = (results) => {
-        for (let result of results) {
-          for (let lineResult of result.lineResults) {
-            console.log("Image Read: ", lineResult.text);
-          }
+      // Create a `CaptureVisionRouter` instance and set `CameraEnhancer` instance as its image source.
+      const router = await CaptureVisionRouter.createInstance();
+      router.setInput(cameraEnhancer);
+
+      // Define a callback for results.
+      const resultReceiver = new CapturedResultReceiver();
+      resultReceiver.onRecognizedTextLinesReceived = (result: RecognizedTextLinesResult) => {
+        if (!result.textLinesResultItems.length) return;
+
+        this.resultsContainer.nativeElement!.innerHTML = "";
+        console.log(result);
+        for (let item of result.textLinesResultItems) {
+          this.resultsContainer.nativeElement!.innerHTML += `${item.text}<br><hr>`;
         }
       };
+      router.addResultReceiver(resultReceiver);
 
-      // Triggered when a different result is recognized
-      recognizer.onUniqueRead = (txt) => {
-        alert(txt);
-        console.log("Unique Code Found: " + txt);
-      }
+      // Filter out unchecked and duplicate results.
+      const filter = new MultiFrameResultCrossFilter();
+      filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text.
+      // Filter out duplicate barcodes within 3 seconds.
+      filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
+      filter.setDuplicateForgetTime(EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+      await router.addResultFilter(filter);
 
-      // Callback to MRZ recognizing result
-      recognizer.onMRZRead = async (txt, results) => {
-        console.log("MRZ results: \n", txt, "\n", results);
-      }
-
-      // Callback to VIN recognizing result
-      recognizer.onVINRead = (txt, results) => {
-        console.log("VIN results: ",txt, results);
-      }
-
-      await recognizer.startScanning(true);
-    } catch(ex: any) {
+      // Open camera and start scanning text.
+      await cameraEnhancer.open();
+      await router.startCapturing("RecognizeTextLines_Default");
+    } catch (ex: any) {
       let errMsg: string;
       if (ex.message.includes("network connection error")) {
         errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
       } else {
-        errMsg = ex.message||ex;
+        errMsg = ex.message || ex;
       }
       console.error(errMsg);
       alert(errMsg);
@@ -64,8 +74,8 @@ export class VideoRecognizerComponent {
   }
 
   async ngOnDestroy() {
-    (await this.dlr)!.destroyContext();
-    (await this.dce)!.dispose(true);
+    (await this.pRouter)!.dispose();
+    (await this.pCameraEnhancer)!.dispose();
     console.log('VideoRecognizer Component Unmount');
   }
 }

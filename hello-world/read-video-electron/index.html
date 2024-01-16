@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Recognize labels from camera with Dynamsoft Label Recognizer in an Electron Application.">
+    <meta name="description"
+        content="Recognize labels from camera with Dynamsoft Label Recognizer in an Electron Application.">
     <meta name="keywords" content="recognize label from camera in Electron">
     <title>Recognize labels from a video input in Electron!</title>
 </head>
@@ -11,10 +12,18 @@
 <body>
     <h1 style="font-size: 1.5em;">Hello World for Electron</h1>
     <button id='recognizeLabel'>Recognize Label via Camera</button>
-    <div id="div-ui-container" style="margin-top: 50px;height: 700px;">
+    <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading
+        Model...</span>
+    <div id="div-ui-container" style="margin-top: 10px;height: 700px;"></div>
+    <script src="./node_modules/@dynamsoft/dynamsoft-core/dist/core.js"></script>
+    <script src="./node_modules/dynamsoft-license/dist/license.js"></script>
+    <script src="./node_modules/@dynamsoft/dynamsoft-utility/dist/utility.js"></script>
+    <script src="./node_modules/@dynamsoft/dynamsoft-label-recognizer/dist/dlr.js"></script>
+    <script src="./node_modules/dynamsoft-capture-vision-router/dist/cvr.js"></script>
     <script src="./node_modules/dynamsoft-camera-enhancer/dist/dce.js"></script>
-    <script src="./node_modules/dynamsoft-label-recognizer/dist/dlr.js"></script>
+
     <script src="./action.js"></script>
     </div>
 </body>
+
 </html>

@@ -18,8 +18,11 @@
     "@angular/platform-browser": "^15.1.0",
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
-    "dynamsoft-camera-enhancer": "^3.3.5",
-    "dynamsoft-label-recognizer": "^2.2.31",
+    "@dynamsoft/dynamsoft-label-recognizer": "^3.0.30-dev-20240115175416",
+    "@dynamsoft/dynamsoft-utility": "^1.0.21-dev-20240115162116",
+    "dynamsoft-camera-enhancer": "^4.0.1",
+    "dynamsoft-capture-vision-router": "^2.0.30",
+    "dynamsoft-license": "^3.0.20",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

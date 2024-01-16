@@ -1,0 +1,40 @@
+import { CoreModule } from 'dynamsoft-core';
+import { LicenseManager } from 'dynamsoft-license';
+import '@dynamsoft/dynamsoft-label-recognizer';
+
+/** LICENSE ALERT - README
+ * To use the library, you need to first specify a license key using the API "initLicense()" as shown below.
+ */
+
+LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
+
+/**
+ * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dbr&package=js to get your own trial license good for 30 days.
+ * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
+ * For more information, see https://www.dynamsoft.com/barcode-reader/programming/javascript/user-guide/?ver=9.6.20&utm_source=github#specify-the-license or contact support@dynamsoft.com.
+ * LICENSE ALERT - THE END
+ */
+
+CoreModule.engineResourcePaths = {
+  std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
+  dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
+  core: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-core@3.0.31-dev-20240115162233/dist/",
+  license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/",
+  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/",
+  dlr: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/",
+  dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
+  dcm: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-character-models/dist/"
+};
+
+// Preload "LabelRecogznier" module for recognizing text. It will save time on the initial recognizing by skipping the module loading.
+CoreModule.loadWasm(["DLR"]).catch((ex) => {
+  let errMsg;
+  if (ex.message?.includes('network connection error')) {
+    errMsg =
+      'Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.';
+  } else {
+    errMsg = ex.message || ex;
+  }
+  console.error(errMsg);
+  alert(errMsg);
+});

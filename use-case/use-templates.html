@@ -7,35 +7,44 @@
     <meta name="description" content="Recognize labels with Dynamsoft Label Recognizer in various templates.">
     <meta name="keywords" content="label recognizing in diffierent templates">
     <title>use-templates</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.5/dist/dce.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.31/dist/dlr.js"></script>
+    <script
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-core@3.0.31-dev-20240115162233/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/license.js"></script>
+    <script
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-utility@1.0.21-dev-20240115162116/dist/utility.js"></script>
+    <script
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/cvr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce.js"></script>
 </head>
 
 <body>
     <h1 style="font-size: 1.5em;">Recognize Label from a Camera</h1>
     <select id="select-tpl">
-        <option value="video-numberLetter">numberLetter</option>
-        <option value="video-passportMRZ">passportMRZ</option>
-        <option value="video-visaMRZ">visaMRZ</option>
-        <option value="video-idcardMRZ">idcardMRZ</option>
-        <option value="video-MRZ">MRZ</option>
-        <option value="video-VIN_NA">VIN_NA</option>
-        <option value="video-VIN">VIN</option>
-        <option value="video-number">number</option>
-        <option value="video-numberUpperCase">numberUpperCase</option>
-        <option value="video-letter">letter</option>
+        <option value="RecognizeTextLines_Default">RecognizeTextLines_Default</option>
+        <option value="RecognizeNumbers">RecognizeNumbers</option>
+        <option value="RecognizeLetters">RecognizeLetters</option>
+        <option value="RecognizeUppercaseLetters">RecognizeUppercaseLetters</option>
+        <option value="RecognizeNumbersAndUppercaseLetters">RecognizeNumbersAndUppercaseLetters</option>
+        <option value="RecognizeNumbersAndLetters">RecognizeNumbersAndLetters</option>
     </select>
     <button id="btn-open-recognizer">Open Label Recognizer</button>
-    <div id="div-ui-container" style="margin-top: 50px; height: 75vh;"></div>
-    <script>       
-        let recognizer = null;
+    <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading
+        Model...</span>
+    <div id="div-ui-container" style="margin-top: 10px; height: 75vh;"></div>
+    <script>
+        let router = null;
         let cameraEnhancer = null;
-        let promiseDLRReady;
+        let promiseCVRReady;
+
+        const cameraViewContainer = document.querySelector("#div-ui-container");
+        const textLoading = document.querySelector("#text-loading");
+        const selectTpl = document.getElementById('select-tpl');
 
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
          */
-         Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+        Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
         /** 
          * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
          * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
@@ -43,65 +52,76 @@
          * LICENSE ALERT - THE END 
          */
 
-        document.getElementById('select-tpl').addEventListener('change', async function() {
-            // Loading settings is expensive, so we check `isOpen` to lazy load settings.
-            // Change to `if(recognizer)` if you want to load settings immediately.
-            if(recognizer && cameraEnhancer && cameraEnhancer.isOpen()) {
-                await recognizer.updateRuntimeSettingsFromString(this.value);
-            }
+        Dynamsoft.DLR.LabelRecognizerModule.onModelLoadProgress = (modelPath, progress) => {
+            if (progress.loaded === 0) {
+                textLoading.style.display = "inline";
+            } else if (progress.loaded === progress.total) {
+                textLoading.style.display = "none";
+            };
+        }
+
+        /**
+         * Preloads the `LabelRecognizer` module
+         */
+        Dynamsoft.Core.CoreModule.loadWasm(["DLR"]);
+
+        /**
+         * Creates a CameraEnhancer instance for later use.
+         */
+        async function initDCE() {
+            const view = await Dynamsoft.DCE.CameraView.createInstance();
+            cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance(view);
+            cameraViewContainer.append(view.getUIElement());
+        }
+
+        /**
+         * Creates a CaptureVisionRouter instance and configure the task to recognize text.
+         * Also, make sure the original image is returned after it has been processed.
+         */
+        let cvrReady = (async function initCVR() {
+            await initDCE();
+            router = await Dynamsoft.CVR.CaptureVisionRouter.createInstance();
+            router.setInput(cameraEnhancer);
+
+            /* Defines the result receiver for the task.*/
+            const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
+            resultReceiver.onCapturedResultReceived = (result) => {
+                if (result.items.length) {
+                    console.log(result);
+                }
+            };
+            await router.addResultReceiver(resultReceiver);
+
+            // Filter out unchecked and duplicate results.
+            const filter = new Dynamsoft.Utility.MultiFrameResultCrossFilter();
+            filter.enableResultCrossVerification(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked barcodes.
+            // Filter out duplicate barcodes within 3 seconds.
+            filter.enableResultDeduplication(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
+            filter.setDuplicateForgetTime(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+            await router.addResultFilter(filter);
+        })();
+
+        document.getElementById('select-tpl').addEventListener('change', async function () {
+            await router.stopCapturing();
+            await router.startCapturing(selectTpl.value);
         });
 
-        document.getElementById('btn-open-recognizer').addEventListener('click', async ()=>{
-            try{
-                const selectTpl = document.getElementById('select-tpl');
-
-                // create an instance only once
-                await (promiseDLRReady = promiseDLRReady || (async() => {
-                    cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-                    // callback of resources loading
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadStarted = (resourcesPath)=>{console.log(resourcesPath+" is loading.")};
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcesPath, progress)=>{console.log("Loading resources progress: " + progress.loaded + "/" + progress.total);};
-                    Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcesPath)=>{console.log(resourcesPath+" is loaded.")};
-
-                    recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
-                    await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
-                    document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
-                    
-                    // Triggered when the video frame is recognized
-                    recognizer.onImageRead = (results) => {
-                        for (let result of results) {
-                            for (let lineResult of result.lineResults) {
-                                console.log("Image Read: ", lineResult.text);
-                            }
-                        }
-                    };
-
-                    // Triggered when a different result is recognized
-                    recognizer.onUniqueRead = (txt) => {
-                        // alert(txt);
-                        console.log("Unique Code Found: " + txt);
-                    }
-
-                    // Callback to MRZ recognizing result
-                    recognizer.onMRZRead = (txt, results) => {
-                        console.log("MRZ results: \n", txt, "\n", results);
-                    }
-
-                    // Callback to VIN recognizing result
-                    recognizer.onVINRead = (txt, results) => {
-                        console.log("VIN results: ",txt, results);
-                    }
+        document.getElementById('btn-open-recognizer').addEventListener('click', async () => {
+            try {
+                await (promiseCVRReady = promiseCVRReady || (async () => {
+                    await cvrReady;
+                    /* Starts streaming the video. */
+                    await cameraEnhancer.open();
+                    /* Uses the built-in template "RecognizeTextLines_Default" to start a recognize task. */
+                    await router.startCapturing(selectTpl.value);
                 })());
-            
-                await recognizer.startScanning(true);
-                await recognizer.updateRuntimeSettingsFromString(selectTpl.value);
-
-            } catch(ex) {
+            } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {
-                    errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
+                    errMsg =
+                        "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
                 } else {
-                    errMsg = ex.message||ex;
+                    errMsg = ex.message || ex;
                 }
                 console.error(errMsg);
                 alert(errMsg);

@@ -7,7 +7,6 @@
         "start": "electron .",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "tom@dynamsoft.com",
     "dependencies": {
         "electron": "14.0.1",
         "@dynamsoft/dynamsoft-label-recognizer": "^3.0.30-dev-20240115175416",

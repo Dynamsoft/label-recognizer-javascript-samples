@@ -11,8 +11,10 @@
     <script
         src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-core@3.0.31-dev-20240115162233/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/license.js"></script>
-    <script src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-utility@1.0.21-dev-20240115162116/dist/utility.js"></script>
-    <script src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/dlr.js"></script>
+    <script
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-utility@1.0.21-dev-20240115162116/dist/utility.js"></script>
+    <script
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/dlr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/cvr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce.js"></script>
 </head>
@@ -23,12 +25,16 @@
     <span id="text-loading" style="display: none; color: red;margin-left: 10px;vertical-align: middle;">Loading
         Model...</span>
     <div id="div-ui-container" style="margin-top: 10px;height: 700px;"></div>
+    Results:
+    <br>
+    <div id="div-results-container" style="width: 100%; height: 10vh; overflow: auto;"></div>
     <script>
         let router = null;
         let cameraEnhancer = null;
         let promiseCVRReady = null;
 
         const cameraViewContainer = document.querySelector("#div-ui-container");
+        const resultsContainer = document.querySelector("#div-results-container");
         const textLoading = document.querySelector("#text-loading");
 
         /** LICENSE ALERT - README 
@@ -75,9 +81,12 @@
 
             /* Defines the result receiver for the task.*/
             const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
-            resultReceiver.onCapturedResultReceived = (result) => {
-                if (result.items.length) {
-                    console.log(result);
+            resultReceiver.onRecognizedTextLinesReceived = (result) => {
+                if (!result.textLinesResultItems.length) return;
+                resultsContainer.innerHTML = "";
+                console.log(result);
+                for (let item of result.textLinesResultItems) {
+                    resultsContainer.innerHTML += `${item.text}<br><hr>`;
                 }
             };
             await router.addResultReceiver(resultReceiver);

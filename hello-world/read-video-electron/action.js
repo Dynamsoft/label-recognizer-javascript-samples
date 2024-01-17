@@ -3,6 +3,7 @@ let cameraEnhancer = null;
 let promiseCVRReady;
 
 const cameraViewContainer = document.querySelector("#div-ui-container");
+const resultsContainer = document.querySelector("#div-results-container");
 const textLoading = document.querySelector("#text-loading");
 
 /** LICENSE ALERT - README 
@@ -25,8 +26,8 @@ Dynamsoft.DLR.LabelRecognizerModule.onModelLoadProgress = (modelPath, progress) 
 }
 
 /**
-         * Preloads the `LabelRecognizer` module
-         */
+ * Preloads the `LabelRecognizer` module
+ */
 Dynamsoft.Core.CoreModule.loadWasm(["DLR"]);
 
 /**
@@ -49,9 +50,12 @@ let cvrReady = (async function initCVR() {
 
     /* Defines the result receiver for the task.*/
     const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
-    resultReceiver.onCapturedResultReceived = (result) => {
-        if (result.items.length) {
-            console.log(result);
+    resultReceiver.onRecognizedTextLinesReceived = (result) => {
+        if (!result.textLinesResultItems.length) return;
+        resultsContainer.innerHTML = "";
+        console.log(result);
+        for (let item of result.textLinesResultItems) {
+            resultsContainer.innerHTML += `${item.text}<br><hr>`;
         }
     };
     await router.addResultReceiver(resultReceiver);

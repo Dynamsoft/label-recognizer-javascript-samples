@@ -17,13 +17,19 @@ Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMD
  * LICENSE ALERT - THE END 
  */
 
-Dynamsoft.DLR.LabelRecognizerModule.onModelLoadProgress = (modelPath, progress) => {
-    if (progress.loaded === 0) {
+Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag, progress) => {
+    if (tag === "starting") {
         textLoading.style.display = "inline";
-    } else if (progress.loaded === progress.total) {
+    } else if (tag === "completed") {
         textLoading.style.display = "none";
     };
 }
+
+Dynamsoft.Core.CoreModule.engineResourcePaths = {
+    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
+    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
+    dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
+};
 
 /**
  * Preloads the `LabelRecognizer` module

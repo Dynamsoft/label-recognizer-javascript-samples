@@ -4,7 +4,7 @@ import { useEffect, useRef, MutableRefObject } from 'react';
 import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
 import { LabelRecognizerModule, RecognizedTextLinesResult } from '@dynamsoft/dynamsoft-label-recognizer';
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
-import { MultiFrameResultCrossFilter } from "@dynamsoft/dynamsoft-utility";
+import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { EnumCapturedResultItemType } from 'dynamsoft-core';
 import "./VideoRecognizer.css";
 
@@ -17,10 +17,10 @@ function VideoRecognizer() {
     const pRouter: MutableRefObject<Promise<CaptureVisionRouter> | null> = useRef(null);
     useEffect((): any => {
         const init = async () => {
-            LabelRecognizerModule.onModelLoadProgress = (modelPath: string, progress: { loaded: number, total: number }) => {
-                if (progress.loaded === 0) {
+            LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: "starting" | "in progress" | "completed", progress: { loaded: number, total: number }) => {
+                if (tag === "starting") {
                     console.log('load started...');
-                } else if (progress.loaded === progress.total) {
+                } else if (tag === "completed") {
                     console.log('load ended...');
                 } else {
                     console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);
@@ -31,7 +31,7 @@ function VideoRecognizer() {
             const cameraView = await (pCameraView.current = CameraView.createInstance());
             const cameraEnhancer = await (pCameraEnhancer.current = CameraEnhancer.createInstance(cameraView));
             uiContainer.current!.append(cameraView.getUIElement()); // Get default UI and append it to DOM.
-            
+
             // Create a `CaptureVisionRouter` instance and set `CameraEnhancer` instance as its image source.
             const router = await (pRouter.current = CaptureVisionRouter.createInstance());
             router.setInput(cameraEnhancer);
@@ -64,7 +64,7 @@ function VideoRecognizer() {
         init();
 
         return async () => {
-            if(pRouter.current) {
+            if (pRouter.current) {
                 (await pRouter.current)!.dispose();
                 (await pCameraEnhancer.current)!.dispose();
             }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { EnumCapturedResultItemType } from "dynamsoft-core";
-import { MultiFrameResultCrossFilter } from "@dynamsoft/dynamsoft-utility";
+import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
 import { LabelRecognizerModule, type RecognizedTextLinesResult } from "@dynamsoft/dynamsoft-label-recognizer";
 import { CapturedResultReceiver, CaptureVisionRouter } from "dynamsoft-capture-vision-router";
@@ -20,15 +20,16 @@ export class VideoRecognizerComponent {
 
   async ngOnInit(): Promise<void> {
     try {
-      LabelRecognizerModule.onModelLoadProgress = (modelPath: string, progress: { loaded: number, total: number }) => {
-        if (progress.loaded === 0) {
+      LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: "starting" | "in progress" | "completed", progress: { loaded: number, total: number }) => {
+        if (tag === "starting") {
           console.log('load started...');
-        } else if (progress.loaded === progress.total) {
+        } else if (tag === "completed") {
           console.log('load ended...');
         } else {
           console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);
         }
       }
+
       // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
       const cameraView = await (this.pCameraView = CameraView.createInstance());
       const cameraEnhancer = await (this.pCameraEnhancer = CameraEnhancer.createInstance(cameraView));

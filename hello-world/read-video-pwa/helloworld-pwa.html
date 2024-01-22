@@ -8,13 +8,11 @@
         content="Recognize labels from camera with Dynamsoft Label Recognizer in a PWA application.">
     <meta name="keywords" content="recognize label from camera in PWA">
     <title>Dynamsoft Label Recognizer PWA Sample - Hello World (recognizing via Camera)</title>
-    <script
-        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-core@3.0.31-dev-20240115162233/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.31/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/license.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.0.21/dist/utility.js"></script>
     <script
-        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-utility@1.0.21-dev-20240115162116/dist/utility.js"></script>
-    <script
-        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/dlr.js"></script>
+        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240119172915/dist/dlr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/cvr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce.js"></script>
     <link rel="manifest" href="./helloworld-pwa.json">
@@ -49,13 +47,14 @@
          * LICENSE ALERT - THE END 
          */
 
-        Dynamsoft.DLR.LabelRecognizerModule.onModelLoadProgress = (modelPath, progress) => {
-            if (progress.loaded === 0) {
+        Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag, progress) => {
+            if (tag === "starting") {
                 textLoading.style.display = "inline";
-            } else if (progress.loaded === progress.total) {
+            } else if (tag === "completed") {
                 textLoading.style.display = "none";
             };
         }
+
 
         /**
          * Preloads the `LabelRecognizer` module

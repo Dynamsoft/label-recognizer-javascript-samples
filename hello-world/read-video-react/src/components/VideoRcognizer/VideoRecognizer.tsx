@@ -2,7 +2,7 @@ import { useEffect, useRef, MutableRefObject } from 'react';
 import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
 import { LabelRecognizerModule, RecognizedTextLinesResult } from '@dynamsoft/dynamsoft-label-recognizer';
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
-import { MultiFrameResultCrossFilter } from "@dynamsoft/dynamsoft-utility";
+import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { EnumCapturedResultItemType } from 'dynamsoft-core';
 import "./VideoRecognizer.css";
 
@@ -15,15 +15,15 @@ function VideoRecognizer() {
     const pRouter: MutableRefObject<Promise<CaptureVisionRouter> | null> = useRef(null);
     useEffect((): any => {
         const init = async () => {
-            LabelRecognizerModule.onModelLoadProgress = (modelPath: string, progress: { loaded: number, total: number }) => {
-                if (progress.loaded === 0) {
+            LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: "starting" | "in progress" | "completed", progress: {loaded: number, total: number}) => {
+                if (tag === "starting") {
                     console.log('load started...');
-                } else if (progress.loaded === progress.total) {
+                } else if (tag === "completed") {
                     console.log('load ended...');
                 } else {
                     console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);
                 }
-            }
+            }    
 
             // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
             const cameraView = await (pCameraView.current = CameraView.createInstance());

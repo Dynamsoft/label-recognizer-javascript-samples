@@ -1,6 +1,9 @@
+import "dynamsoft-license";
+import "dynamsoft-capture-vision-router";
+import "@dynamsoft/dynamsoft-label-recognizer";
+
 import { CoreModule } from 'dynamsoft-core';
 import { LicenseManager } from 'dynamsoft-license';
-import '@dynamsoft/dynamsoft-label-recognizer';
 
 /** LICENSE ALERT - README
  * To use the library, you need to first specify a license key using the API "initLicense()" as shown below.
@@ -18,12 +21,12 @@ LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
 CoreModule.engineResourcePaths = {
   std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
   dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
-  core: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-core@3.0.31-dev-20240115162233/dist/",
+  core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.31/dist/",
   license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/",
   cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/",
-  dlr: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240115153025/dist/",
+  dlr: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240122141937/dist/",
   dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
-  dcm: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-character-models/dist/"
+  dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
 };
 
 // Preload "LabelRecogznier" module for recognizing text. It will save time on the initial recognizing by skipping the module loading.

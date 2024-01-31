@@ -23,21 +23,15 @@ CoreModule.engineResourcePaths = {
   dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
   core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/",
   license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/",
-  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/",
-  dlr: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240122141937/dist/",
+  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.31-beta-202401242351/dist/",
+  dlr: "https://npm.scannerproxy.com:802/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240125112120/dist/",
   dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
   dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
 };
 
 // Preload "LabelRecogznier" module for recognizing text. It will save time on the initial recognizing by skipping the module loading.
-CoreModule.loadWasm(["DLR"]).catch((ex:any) => {
-  let errMsg;
-  if (ex.message?.includes('network connection error')) {
-    errMsg =
-      'Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.';
-  } else {
-    errMsg = ex.message || ex;
-  }
+CoreModule.loadWasm(["DLR"]).catch((ex: any) => {
+  let errMsg = ex.message || ex;
   console.error(errMsg);
   alert(errMsg);
 });

@@ -10,11 +10,9 @@
     <title>Dynamsoft Label Recognize Sample - Hello World (recognizing via Camera)</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/license.js"></script>
-    <script src="https://192.168.8.122/desktop/tfs/Products/DynamsoftLicense/JS/dist/license.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.0.21/dist/utility.js"></script>
-    <script
-        src="https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240119172915/dist/dlr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/cvr.js"></script>
+    <script src="https://npm.scannerproxy.com:802/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240125112120/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.31/dist/cvr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce.js"></script>
 </head>
 
@@ -81,10 +79,10 @@
             /* Defines the result receiver for the task.*/
             const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
             resultReceiver.onRecognizedTextLinesReceived = (result) => {
-                if (!result.textLinesResultItems.length) return;
+                if (!result.textLineResultItems.length) return;
                 resultsContainer.innerHTML = "";
                 console.log(result);
-                for (let item of result.textLinesResultItems) {
+                for (let item of result.textLineResultItems) {
                     resultsContainer.innerHTML += `${item.text}<br><hr>`;
                 }
             };

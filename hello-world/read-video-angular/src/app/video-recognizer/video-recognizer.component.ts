@@ -42,11 +42,11 @@ export class VideoRecognizerComponent {
       // Define a callback for results.
       const resultReceiver = new CapturedResultReceiver();
       resultReceiver.onRecognizedTextLinesReceived = (result: RecognizedTextLinesResult) => {
-        if (!result.textLinesResultItems.length) return;
+        if (!result.textLineResultItems.length) return;
 
         this.resultsContainer.nativeElement!.innerHTML = "";
         console.log(result);
-        for (let item of result.textLinesResultItems) {
+        for (let item of result.textLineResultItems) {
           this.resultsContainer.nativeElement!.innerHTML += `${item.text}<br><hr>`;
         }
       };
@@ -64,12 +64,7 @@ export class VideoRecognizerComponent {
       await cameraEnhancer.open();
       await router.startCapturing("RecognizeTextLines_Default");
     } catch (ex: any) {
-      let errMsg: string;
-      if (ex.message.includes("network connection error")) {
-        errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-      } else {
-        errMsg = ex.message || ex;
-      }
+      let errMsg = ex.message || ex;
       console.error(errMsg);
       alert(errMsg);
     }

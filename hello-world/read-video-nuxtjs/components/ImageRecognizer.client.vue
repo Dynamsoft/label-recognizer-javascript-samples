@@ -29,12 +29,7 @@ const captureImage = async (e: any) => {
         resRef.value!.innerText = res.join("\n");
         iptRef.value!.value = '';
     } catch(ex:any) {
-        let errMsg: string;
-        if (ex.message.includes("network connection error")) {
-            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-        } else {
-            errMsg = ex.message||ex;
-        }
+        let errMsg = ex.message || ex;
         console.error(errMsg);
         alert(errMsg);
     }

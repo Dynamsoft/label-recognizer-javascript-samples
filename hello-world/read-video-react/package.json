@@ -15,7 +15,7 @@
     "@types/react-dom": "^18.0.10",
     "dynamsoft-camera-enhancer": "^4.0.1",
     "dynamsoft-capture-vision-router": "^2.0.30",
-    "dynamsoft-core": "^3.0.31",
+    "dynamsoft-core": "^3.0.32",
     "dynamsoft-license": "^3.0.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

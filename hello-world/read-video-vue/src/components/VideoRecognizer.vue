@@ -21,7 +21,7 @@ const init = async (): Promise<{
     router: CaptureVisionRouter;
 }> => {
     try {
-        LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: "starting" | "in progress" | "completed", progress: {loaded: number, total: number}) => {
+        LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: string, progress: { loaded: number, total: number }) => {
             if (tag === "starting") {
                 console.log('load started...');
             } else if (tag === "completed") {
@@ -70,13 +70,7 @@ const init = async (): Promise<{
             router,
         };
     } catch (ex: any) {
-        let errMsg;
-        if (ex.message?.includes("network connection error")) {
-            errMsg =
-                "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-        } else {
-            errMsg = ex.message || ex;
-        }
+        let errMsg = ex.message || ex;
         console.error(errMsg);
         alert(errMsg);
         throw ex;

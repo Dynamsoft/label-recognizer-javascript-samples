@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, type Ref } from "vue";
-import type { TextLineResultItem } from "@dynamsoft/dynamsoft-label-recognizer"
+import type { TextLineResultItem } from "dynamsoft-label-recognizer"
 import { CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 
 const iptRef: Ref<HTMLInputElement | null> = ref(null);

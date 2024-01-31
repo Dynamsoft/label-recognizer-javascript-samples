@@ -1,6 +1,6 @@
 import "dynamsoft-license";
 import "dynamsoft-capture-vision-router";
-import "@dynamsoft/dynamsoft-label-recognizer";
+import "dynamsoft-label-recognizer";
 
 import { CoreModule } from 'dynamsoft-core';
 import { LicenseManager } from 'dynamsoft-license';
@@ -23,8 +23,8 @@ CoreModule.engineResourcePaths = {
   dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
   core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/",
   license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.20/dist/",
-  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/",
-  dlr: "https://npm.scannerproxy.com/cdn/@dynamsoft/dynamsoft-label-recognizer@3.0.30-dev-20240122141937/dist/",
+  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/",
+  dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/",
   dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
   dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
 };

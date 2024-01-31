@@ -1,5 +1,5 @@
 import { useEffect, useRef, MutableRefObject } from "react";
-import type { TextLineResultItem } from "@dynamsoft/dynamsoft-label-recognizer"
+import type { TextLineResultItem } from "dynamsoft-label-recognizer"
 import { CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 import "./ImageRecognizer.css";
 

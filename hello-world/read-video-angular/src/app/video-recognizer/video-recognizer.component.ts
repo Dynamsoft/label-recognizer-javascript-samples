@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { EnumCapturedResultItemType } from "dynamsoft-core";
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
-import { LabelRecognizerModule, type RecognizedTextLinesResult } from "@dynamsoft/dynamsoft-label-recognizer";
+import { LabelRecognizerModule, type RecognizedTextLinesResult } from "dynamsoft-label-recognizer";
 import { CapturedResultReceiver, CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 
 @Component({

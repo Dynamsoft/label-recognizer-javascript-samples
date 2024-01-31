@@ -9,11 +9,11 @@
     },
     "dependencies": {
         "electron": "14.0.1",
-        "@dynamsoft/dynamsoft-label-recognizer": "^3.0.30-dev-20240122141937",
+        "dynamsoft-label-recognizer": "^3.0.30",
         "dynamsoft-utility": "^1.0.21",
         "dynamsoft-camera-enhancer": "^4.0.1",
-        "dynamsoft-core": "^3.0.31",
-        "dynamsoft-capture-vision-router": "^2.0.30",
+        "dynamsoft-core": "^3.0.32",
+        "dynamsoft-capture-vision-router": "^2.0.32",
         "dynamsoft-license": "^3.0.20"
     }
 }

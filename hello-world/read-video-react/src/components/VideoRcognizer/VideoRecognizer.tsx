@@ -1,6 +1,6 @@
 import { useEffect, useRef, MutableRefObject } from 'react';
 import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
-import { LabelRecognizerModule, RecognizedTextLinesResult } from '@dynamsoft/dynamsoft-label-recognizer';
+import { LabelRecognizerModule, RecognizedTextLinesResult } from 'dynamsoft-label-recognizer';
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { EnumCapturedResultItemType } from 'dynamsoft-core';

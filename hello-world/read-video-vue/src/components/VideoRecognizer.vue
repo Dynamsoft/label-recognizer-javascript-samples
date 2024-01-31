@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref, type Ref } from "vue";
 import { EnumCapturedResultItemType } from "dynamsoft-core";
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
-import { LabelRecognizerModule, type RecognizedTextLinesResult } from "@dynamsoft/dynamsoft-label-recognizer";
+import { LabelRecognizerModule, type RecognizedTextLinesResult } from "dynamsoft-label-recognizer";
 import { CapturedResultReceiver, CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 
 const uiContainer: Ref<HTMLElement | null> = ref(null);

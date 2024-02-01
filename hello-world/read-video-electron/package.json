@@ -14,6 +14,6 @@
         "dynamsoft-camera-enhancer": "^4.0.1",
         "dynamsoft-core": "^3.0.32",
         "dynamsoft-capture-vision-router": "^2.0.32",
-        "dynamsoft-license": "^3.0.20"
+        "dynamsoft-license": "^3.0.40"
     }
 }

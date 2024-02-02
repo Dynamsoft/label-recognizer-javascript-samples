@@ -16,20 +16,33 @@
         <input id="ipt-readonly-last-result" title="Double click to clear!" readonly placeholder="The Last Recognized Label" style="width:80vw;margin-top:20px;">
         <p id='p-loading' style='font-size:1.5em'>Loading Library...</p>
         <p id='p-recognizing' style='font-size:1.5em;display:none;'>Recognizing Labels...</p>
-        <div id="div-cvs-container" style="width:80vw;height:40vh;margin-top:20px;display:flex;justify-content:center;"></div>
+        <div id="div-cvs-container" style="width:80vw;height:40vh;margin-top:20px;display:flex;justify-content:center;">
+        </div>
         <p>All Results:</p>
-        <div id="div-results" style="width:80vw;height:15vh;padding:16px;overflow-y:auto;border: 1px dashed grey;font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;"></div>
+        <div id="div-results" style="width:80vw;height:15vh;padding:16px;overflow-y:auto;border: 1px dashed grey;font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">
+        </div>
     </div>
     <style>
-        .sp-resultText { color: #cE5E04 }
-        #div-cvs-container canvas { border: solid 1px gray; }
+        .sp-resultText {
+            color: #cE5E04
+        }
+
+        #div-cvs-container canvas {
+            border: solid 1px gray;
+            width: 100%;
+            object-fit: contain;
+        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.31/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/license.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.0.21/dist/utility.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/cvr.js"></script>
     <script>
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
          */
-        Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+        Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
         /** 
          * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
          * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
@@ -37,15 +50,21 @@
          * LICENSE ALERT - THE END 
          */
 
-        // Load the library on page load to speed things up.
+        /**
+         * Preloads the `LabelRecognizer` module
+         */
+        Dynamsoft.Core.CoreModule.loadWasm(["DLR"]);
 
-        // recognizer for recognizing pictures
-        let pRecognizer = null;
-        (async() => {
+        // router for recognizing pictures
+        let pRouter = null;
+        let imageManager = new Dynamsoft.Utility.ImageManager();
+        (async () => {
             try {
-                const recognizer = await (pRecognizer = pRecognizer || Dynamsoft.DLR.LabelRecognizer.createInstance());
-                recognizer.ifSaveOriginalImageInACanvas = true;
-                await recognizer.updateRuntimeSettingsFromString("mrz");
+                const router = await (pRouter = pRouter || Dynamsoft.CVR.CaptureVisionRouter.createInstance());
+                const settings = await router.getSimplifiedSettings("RecognizeTextLines_Default");
+                settings.capturedResultItemTypes |= Dynamsoft.Core.EnumCapturedResultItemType.CRIT_ORIGINAL_IMAGE;
+                await router.updateSettings("RecognizeTextLines_Default", settings);
+                await Dynamsoft.DLR.LabelRecognizerModule.loadRecognitionData("NumberLetter");
                 document.getElementById('p-loading').style.display = 'none';
             } catch (ex) {
                 alert(ex.message);
@@ -60,41 +79,38 @@
         const divResults = document.getElementById('div-results');
         const divCvsContainer = document.getElementById('div-cvs-container');
 
-        iptFile.addEventListener('change', async function() {
+        iptFile.addEventListener('change', async function () {
             const file = this.files[0];
             pRecognizing.style.display = '';
             try {
-                const recognizer = await pRecognizer;
-                const results = await recognizer.recognize(file);
+                const router = await pRouter;
+                const results = await router.capture(file, "RecognizeTextLines_Default");
 
                 // show image
+                const originalImage = results.items.filter(item => item.type === 1);
+                const originalCanvas = await imageManager.toCanvas(originalImage[0].imageData);
                 divCvsContainer.innerHTML = '';
-                divCvsContainer.appendChild(recognizer.getOriginalImageInACanvas());
-                
+                divCvsContainer.appendChild(originalCanvas);
+
+
                 // show results
                 divResults.appendChild(createEl('h3', file.name + ": "));
                 if (0 === results.length) {
                     divResults.appendChild(createEl('p', "No Label Found!"));
                 }
-                for (let result of results) {
-                    iptReadonlyLastResult.value = "";
-                    for(let lineResult of result.lineResults){
-                        iptReadonlyLastResult.value += lineResult.text + " "; // show last txt result
-                        const p = document.createElement('p');
-                        p.appendChild(createEl('span', lineResult.text, "sp-resultText"));
-                        divResults.appendChild(p);
-                    }
+                iptReadonlyLastResult.value = "";
+                results.items = results.items.filter(item => item.type !== 1);
+                for (let item of results.items) {
+                    iptReadonlyLastResult.value += item.text + " "; // show last txt result
+                    const p = document.createElement('p');
+                    p.appendChild(createEl('span', item.text, "sp-resultText"));
+                    divResults.appendChild(p);
                 }
 
                 divResults.appendChild(document.createElement('hr'));
                 divResults.scrollTop = divResults.scrollHeight;
             } catch (ex) {
-                let errMsg;
-                if (ex.message.includes("network connection error")) {
-                    errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-                } else {
-                    errMsg = ex.message||ex;
-                }
+                let errMsg = ex.message || ex;
                 console.error(errMsg);
                 alert(errMsg);
             } finally {
@@ -103,14 +119,14 @@
             }
         });
 
-        iptReadonlyLastResult.addEventListener('dblclick', async() => {
+        iptReadonlyLastResult.addEventListener('dblclick', async () => {
             iptReadonlyLastResult.value = "";
         });
 
         function createEl(type, txt, className) {
             const el = document.createElement(type);
             el.textContent = txt;
-            if (className){
+            if (className) {
                 el.className = className;
             }
             return el;

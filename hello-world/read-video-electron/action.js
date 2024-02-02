@@ -1,14 +1,15 @@
-let recognizer = null;
+let router = null;
 let cameraEnhancer = null;
-let promiseDLRReady;
+let promiseCVRReady;
 
-Dynamsoft.DLR.LabelRecognizer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.31/dist/"; 
-Dynamsoft.DCE.CameraEnhancer.engineResourcePath = "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.5/dist/";
+const cameraViewContainer = document.querySelector("#div-ui-container");
+const resultsContainer = document.querySelector("#div-results-container");
+const textLoading = document.querySelector("#text-loading");
 
 /** LICENSE ALERT - README 
  * To use the library, you need to first specify a license key using the API "license" as shown below.
  */
-Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
 /** 
  * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
  * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
@@ -16,51 +17,75 @@ Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ
  * LICENSE ALERT - THE END 
  */
 
+Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag, progress) => {
+    if (tag === "starting") {
+        textLoading.style.display = "inline";
+    } else if (tag === "completed") {
+        textLoading.style.display = "none";
+    };
+}
+
+Dynamsoft.Core.CoreModule.engineResourcePaths = {
+    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
+    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
+    dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
+};
+
+/**
+ * Preloads the `LabelRecognizer` module
+ */
+Dynamsoft.Core.CoreModule.loadWasm(["DLR"]);
+
+/**
+ * Creates a CameraEnhancer instance for later use.
+ */
+async function initDCE() {
+    const view = await Dynamsoft.DCE.CameraView.createInstance();
+    cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance(view);
+    cameraViewContainer.append(view.getUIElement());
+}
+
+/**
+ * Creates a CaptureVisionRouter instance and configure the task to recognize text.
+ * Also, make sure the original image is returned after it has been processed.
+ */
+let cvrReady = (async function initCVR() {
+    await initDCE();
+    router = await Dynamsoft.CVR.CaptureVisionRouter.createInstance();
+    router.setInput(cameraEnhancer);
+
+    /* Defines the result receiver for the task.*/
+    const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
+    resultReceiver.onRecognizedTextLinesReceived = (result) => {
+        if (!result.textLinesResultItems.length) return;
+        resultsContainer.innerHTML = "";
+        console.log(result);
+        for (let item of result.textLinesResultItems) {
+            resultsContainer.innerHTML += `${item.text}<br><hr>`;
+        }
+    };
+    await router.addResultReceiver(resultReceiver);
+
+    // Filter out unchecked and duplicate results.
+    const filter = new Dynamsoft.Utility.MultiFrameResultCrossFilter();
+    filter.enableResultCrossVerification(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked barcodes.
+    // Filter out duplicate barcodes within 3 seconds.
+    filter.enableResultDeduplication(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
+    filter.setDuplicateForgetTime(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+    await router.addResultFilter(filter);
+})();
+
 document.getElementById('recognizeLabel').onclick = async () => {
     try {
-        await (promiseDLRReady = promiseDLRReady || (async() => {
-            cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
-
-            recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
-            await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
-            await recognizer.updateRuntimeSettingsFromString("video-mrz");
-
-            document.getElementById('div-ui-container').append(cameraEnhancer.getUIElement());
-            
-            // Triggered when the video frame is recognized
-            recognizer.onImageRead = (results) => {
-                for (let result of results) {
-                    for (let lineResult of result.lineResults) {
-                        console.log("Image Read: ", lineResult.text);
-                    }
-                }
-            };
-
-            // Triggered when a different result is recognized
-            recognizer.onUniqueRead = (txt) => {
-                alert(txt);
-                console.log("Unique Code Found: " + txt);
-            }
-
-            // Callback to MRZ recognizing result
-            recognizer.onMRZRead = async (txt, results) => {
-                console.log("MRZ results: \n", txt, "\n", results);
-            }
-
-            // Callback to VIN recognizing result
-            recognizer.onVINRead = (txt, results) => {
-                console.log("VIN results: ",txt, results);
-            }
+        await (promiseCVRReady = promiseCVRReady || (async () => {
+            await cvrReady;
+            /* Starts streaming the video. */
+            await cameraEnhancer.open();
+            /* Uses the built-in template "RecognizeTextLines_Default" to start a recognize task. */
+            await router.startCapturing("RecognizeTextLines_Default");
         })());
-
-        await recognizer.startScanning(true);
     } catch (ex) {
-        let errMsg;
-        if (ex.message.includes("network connection error")) {
-            errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-        } else {
-            errMsg = ex.message||ex;
-        }
+        let errMsg = ex.message || ex;
         console.error(errMsg);
         alert(errMsg);
     }

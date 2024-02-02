@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { LabelRecognizer } from 'dynamsoft-label-recognizer';
+import type { TextLineResultItem } from "dynamsoft-label-recognizer"
+import { CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 
 @Component({
   selector: 'app-image-recognizer',
@@ -7,43 +8,36 @@ import { LabelRecognizer } from 'dynamsoft-label-recognizer';
   styleUrls: ['./image-recognizer.component.css']
 })
 export class ImageRecognizerComponent {
-  dlr: Promise<LabelRecognizer> | null = null;
+  pRouter: Promise<CaptureVisionRouter> | null = null;
 
   @ViewChild('iptRef') iptRef: any;
   @ViewChild('resRef') resRef: any;
 
   ngOnInit(): void {
-    this.dlr = LabelRecognizer.createInstance({runtimeSettings: "mrz"});
+    this.pRouter = CaptureVisionRouter.createInstance();
   }
 
-  recognizeImg = async (e: any) => {
+  captureImage = async (e: any) => {
     try {
-      this.iptRef.nativeElement.innerText = "";
-      const recognizer = await this.dlr;
-      const results = await recognizer!.recognize(e.target.files[0]);
+      this.resRef!.innerText = "";
+      const router = await this.pRouter;
+      const results = await router!.capture(e.target.files[0]);
       const res = [];
-      for(let result of results){
-        for(let line of result.lineResults) {
-          console.log(line.text);
-          res.push(line.text);
-        }
+      for (let result of results.items) {
+        console.log((result as TextLineResultItem).text);
+        res.push((result as TextLineResultItem).text);
       }
       this.resRef.nativeElement!.innerText = res.join("\n");
       this.iptRef.nativeElement!.value = '';
-    } catch(ex: any) {
-      let errMsg: string;
-      if (ex.message.includes("network connection error")) {
-        errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
-      } else {
-        errMsg = ex.message||ex;
-      }
+    } catch (ex: any) {
+      let errMsg = ex.message || ex;
       console.error(errMsg);
       alert(errMsg);
     }
   }
 
   async ngOnDestroy() {
-    (await this.dlr)!.destroyContext();
+    (await this.pRouter)!.dispose();
     console.log('ImageRecognizer Component Unmount');
   }
 }

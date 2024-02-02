@@ -21,7 +21,7 @@ const init = async (): Promise<{
     router: CaptureVisionRouter;
 }> => {
     try {
-        LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: string, progress: { loaded: number, total: number }) => {
+        LabelRecognizerModule.onDataLoadProgressChanged = (filePath: string, tag: "starting" | "in progress" | "completed", progress: { loaded: number, total: number }) => {
             if (tag === "starting") {
                 console.log('load started...');
             } else if (tag === "completed") {
@@ -30,7 +30,7 @@ const init = async (): Promise<{
                 console.log("Loading resources progress: " + progress!.loaded + "/" + progress!.total);
             }
         }
-
+        
         // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
         const cameraView = await CameraView.createInstance();
         const cameraEnhancer = await CameraEnhancer.createInstance(cameraView);

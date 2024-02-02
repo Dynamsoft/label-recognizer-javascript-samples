@@ -51,7 +51,7 @@ export class VideoRecognizerComponent {
         }
       };
       router.addResultReceiver(resultReceiver);
-
+      
       // Filter out unchecked and duplicate results.
       const filter = new MultiFrameResultCrossFilter();
       filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text.

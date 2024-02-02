@@ -43,11 +43,11 @@ const init = async (): Promise<{
         // Define a callback for results.
         const resultReceiver = new CapturedResultReceiver();
         resultReceiver.onRecognizedTextLinesReceived = (result: RecognizedTextLinesResult) => {
-            if (!result.textLinesResultItems.length) return;
+            if (!result.textLineResultItems.length) return;
 
             resultsContainer.value!.innerHTML = "";
             console.log(result);
-            for (let item of result.textLinesResultItems) {
+            for (let item of result.textLineResultItems) {
                 resultsContainer.value!.innerHTML += `${item.text}<br><hr>`;
             }
         };

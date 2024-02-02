@@ -57,10 +57,10 @@ let cvrReady = (async function initCVR() {
     /* Defines the result receiver for the task.*/
     const resultReceiver = new Dynamsoft.CVR.CapturedResultReceiver();
     resultReceiver.onRecognizedTextLinesReceived = (result) => {
-        if (!result.textLinesResultItems.length) return;
+        if (!result.textLineResultItems.length) return;
         resultsContainer.innerHTML = "";
         console.log(result);
-        for (let item of result.textLinesResultItems) {
+        for (let item of result.textLineResultItems) {
             resultsContainer.innerHTML += `${item.text}<br><hr>`;
         }
     };

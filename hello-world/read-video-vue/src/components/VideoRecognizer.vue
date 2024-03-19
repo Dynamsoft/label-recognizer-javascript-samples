@@ -56,7 +56,7 @@ const init = async (): Promise<{
         // Filter out unchecked and duplicate results.
         const filter = new MultiFrameResultCrossFilter();
         filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text.
-        // Filter out duplicate barcodes within 3 seconds.
+        // Filter out duplicate text lines within 3 seconds.
         filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
         filter.setDuplicateForgetTime(EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
         await router.addResultFilter(filter);

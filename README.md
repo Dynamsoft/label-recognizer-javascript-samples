@@ -2,7 +2,7 @@
 
 This repository contains multiple samples that demonstrates how to use [Dynamsoft Lable Recognizer JavaScript Edition](https://www.dynamsoft.com/label-recognition/programming/javascript/?ver=latest).
 
-[User Guide](https://www.dynamsoft.com/label-recognition/programming/javascript/user-guide.html?ver=latest)
+[User Guide](https://www.dynamsoft.com/label-recognition/docs/web/programming/javascript/user-guide/index.html)
 
 [API Reference](https://www.dynamsoft.com/label-recognition/programming/javascript/api-reference/?ver=latest)
 

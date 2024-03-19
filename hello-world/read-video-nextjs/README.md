@@ -158,8 +158,8 @@ function VideoCapture() {
       filter.enableResultCrossVerification(
         EnumCapturedResultItemType.CRIT_BARCODE,
         true
-      ); // Filter out unchecked barcodes.
-      // Filter out duplicate barcodes within 3 seconds.
+      ); // Filter out unchecked text lines.
+      // Filter out duplicate text lines within 3 seconds.
       filter.enableResultDeduplication(
         EnumCapturedResultItemType.CRIT_BARCODE,
         true

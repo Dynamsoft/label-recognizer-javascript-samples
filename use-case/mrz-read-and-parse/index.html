@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MRZ Read And Parse</title>
+  <script src=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/core.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/license.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dynamsoft-code-parser@2.0.20/dist/dcp.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.5/dist/dce.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@2.2.31/dist/dlr.js"></script>
 </head>
+
 <body>
   <h1 style="font-size: 1.5em;">Recognize MRZ from a Camera</h1>
   <button id="btn-open-recognize">Open MRZ Recognizer</button>
@@ -15,16 +21,18 @@
   <div id="div-ui-container" style="margin-top: 15px;height: 50vh;"></div>
   <div id="mrz-results" style="margin-top: 15px;"></div>
   <script type="module">
-    import { mrzParseTwoLine, mrzParseThreeLine } from './mrz-parser.js'
-    
+    import { handleMrzParseResult } from './mrz-parser.js'
+
     let cameraEnhancer = null;
     let recognizer = null;
+    let parser = null;
     let promiseDLRReady;
 
     /** LICENSE ALERT - README 
      * To use the library, you need to first specify a license key using the API "license" as shown below.
      */
     Dynamsoft.DLR.LabelRecognizer.license = "DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9";
+    Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
     /** 
      * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dlr&package=js to get your own trial license good for 30 days. 
      * Note that if you downloaded this sample from Dynamsoft while logged in, the above license key may already be your own 30-day trial license.
@@ -32,12 +40,19 @@
      * LICENSE ALERT - THE END 
      */
 
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD1_ID");
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD2_FRENCH_ID");
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD2_ID");
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD2_VISA");
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD3_PASSPORT");
+    Dynamsoft.DCP.CodeParserModule.loadSpec("MRTD_TD3_VISA");
+
     document.getElementById('btn-open-recognize').addEventListener('click', async () => {
       try {
         await (promiseDLRReady = promiseDLRReady || (async () => {
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoadProgress = (resourcePath, progress) => {
             // In this event handler, you can display the loading progress of the model file.
-            document.querySelector('#model-loading').innerHTML = "Model Loading..." + " " + (progress.loaded / progress.total).toFixed(2)*100 + "%";
+            document.querySelector('#model-loading').innerHTML = "Model Loading..." + " " + (progress.loaded / progress.total).toFixed(2) * 100 + "%";
           }
           Dynamsoft.DLR.LabelRecognizer.onResourcesLoaded = (resourcePath) => {
             // In this event handler, you can close the visual cue if it was displayed.
@@ -48,25 +63,25 @@
             document.querySelector("#mrz-results").innerHTML = '';
           });
           recognizer = await Dynamsoft.DLR.LabelRecognizer.createInstance();
-          await recognizer.setImageSource(cameraEnhancer, {resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem});
+          await recognizer.setImageSource(cameraEnhancer, { resultsHighlightBaseShapes: Dynamsoft.DCE.DrawingItem });
           await recognizer.updateRuntimeSettingsFromString("video-mrz");
 
           await document.getElementById('div-ui-container').appendChild(cameraEnhancer.getUIElement());
 
+          Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
+          parser = await Dynamsoft.DCP.CodeParser.createInstance();
+
           // Callback to MRZ recognizing result
-          recognizer.onMRZRead = (txt, results) => {
-            parseMrzAndUpdateDom(results);
+          recognizer.onMRZRead = async (txt, results) => {
+            await parseMrzAndUpdateDom(txt, results);
           }
 
-          function parseMrzAndUpdateDom(results) {
-            let parseResults;
-            if(results.length === 2) {
-              parseResults = mrzParseTwoLine(results[0].text, results[1].text);
-            } else if(results.length === 3) {
-              parseResults = mrzParseThreeLine(results[0].text, results[1].text, results[2].text);
-            }
+          async function parseMrzAndUpdateDom(txt, results) {
+            let parseResults = await parser.parse(txt);
+            parseResults = handleMrzParseResult(parseResults);
+            console.log(parseResults);
             document.querySelector("#mrz-results").innerHTML = '';
-            for(let info in parseResults) {
+            for (let info in parseResults) {
               let infoDiv = document.createElement('div');
               infoDiv.style.marginTop = "10px";
               infoDiv.innerHTML = info + " : " + parseResults[info];
@@ -75,12 +90,12 @@
           }
         })());
         await recognizer.startScanning(true);
-      } catch(ex) {
+      } catch (ex) {
         let errMsg;
         if (ex.message.includes("network connection error")) {
           errMsg = "Failed to connect to Dynamsoft License Server: network connection error. Check your Internet connection or contact Dynamsoft Support (support@dynamsoft.com) to acquire an offline license.";
         } else {
-          errMsg = ex.message||ex;
+          errMsg = ex.message || ex;
         }
         console.error(errMsg);
         alert(errMsg);
@@ -88,4 +103,5 @@
     })
   </script>
 </body>
+
 </html>

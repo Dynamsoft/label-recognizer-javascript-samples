@@ -81,11 +81,15 @@
             parseResults = handleMrzParseResult(parseResults);
             console.log(parseResults);
             document.querySelector("#mrz-results").innerHTML = '';
-            for (let info in parseResults) {
-              let infoDiv = document.createElement('div');
-              infoDiv.style.marginTop = "10px";
-              infoDiv.innerHTML = info + " : " + parseResults[info];
-              document.querySelector("#mrz-results").appendChild(infoDiv);
+            if (JSON.stringify(parseResults) === "{}") {
+              alert('Parse Failed!');
+            } else {
+              for (let info in parseResults) {
+                let infoDiv = document.createElement('div');
+                infoDiv.style.marginTop = "10px";
+                infoDiv.innerHTML = info + " : " + parseResults[info];
+                document.querySelector("#mrz-results").appendChild(infoDiv);
+              }
             }
           }
         })());

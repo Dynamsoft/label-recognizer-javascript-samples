@@ -5,7 +5,6 @@ import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
 import { LabelRecognizerModule, RecognizedTextLinesResult } from 'dynamsoft-label-recognizer';
 import { CaptureVisionRouter, CapturedResultReceiver } from 'dynamsoft-capture-vision-router';
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
-import { EnumCapturedResultItemType } from 'dynamsoft-core';
 import "./VideoRecognizer.css";
 
 function VideoRecognizer() {
@@ -51,10 +50,10 @@ function VideoRecognizer() {
 
             // Filter out unchecked and duplicate results.
             const filter = new MultiFrameResultCrossFilter();
-            filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text.
+            filter.enableResultCrossVerification("text_line", true); // Filter out unchecked text.
             // Filter out duplicate text lines within 3 seconds.
-            filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
-            filter.setDuplicateForgetTime(EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+            filter.enableResultDeduplication("text_line", true);
+            filter.setDuplicateForgetTime("text_line", 3000);
             await router.addResultFilter(filter);
 
             // Open camera and start scanning text.

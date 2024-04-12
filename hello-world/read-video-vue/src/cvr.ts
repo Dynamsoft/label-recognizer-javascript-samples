@@ -19,14 +19,15 @@ LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9");
  */
 
 CoreModule.engineResourcePaths = {
-  std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
-  dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
-  core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/",
-  license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/",
-  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/",
-  dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/",
-  dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
-  dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
+  std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.0/dist/",
+  dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.10/dist/",
+  core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/",
+  license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/",
+  cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/",
+  dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/",
+  dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/",
+  dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.10/dist/',
+  dlrData: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/"
 };
 
 // Preload "LabelRecogznier" module for recognizing text. It will save time on the initial recognizing by skipping the module loading.

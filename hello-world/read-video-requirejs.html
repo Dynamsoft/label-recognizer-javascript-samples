@@ -21,12 +21,12 @@
     <script>
         requirejs.config({
             paths: {
-                "dynamsoft-core": "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/core",
-                "dynamsoft-license": "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/license",
-                "dynamsoft-utility": "https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.0.21/dist/utility",
-                "dynamsoft-label-recognizer": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/dlr",
-                "dynamsoft-capture-vision-router": "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/cvr",
-                "dynamsoft-camera-enhancer": "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce",
+                "dynamsoft-core": "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/core",
+                "dynamsoft-license": "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/license",
+                "dynamsoft-utility": "https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.10/dist/utility",
+                "dynamsoft-label-recognizer": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/dlr",
+                "dynamsoft-capture-vision-router": "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/cvr",
+                "dynamsoft-camera-enhancer": "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/dce",
             },
         });
 
@@ -47,14 +47,15 @@
                 { CameraView, CameraEnhancer }
             ) {
             CoreModule.engineResourcePaths = {
-                std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
-                dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
-                core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/",
-                license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/",
-                cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/",
-                dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/",
-                dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/",
-                dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
+                std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.0/dist/",
+                dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.10/dist/",
+                core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/",
+                license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/",
+                cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/",
+                dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/",
+                dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/",
+                dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.10/dist/',
+                dlrData: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/"
             };
 
             const cameraViewContainer = document.querySelector("#div-ui-container");
@@ -121,10 +122,10 @@
 
                 // Filter out unchecked and duplicate results.
                 const filter = new MultiFrameResultCrossFilter();
-                filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text lines.
+                filter.enableResultCrossVerification("text_line", true); // Filter out unchecked text lines.
                 // Filter out duplicate text lines within 3 seconds.
-                filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
-                filter.setDuplicateForgetTime(EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+                filter.enableResultDeduplication("text_line", true);
+                filter.setDuplicateForgetTime("text_line", 3000);
                 await router.addResultFilter(filter);
             })();
 

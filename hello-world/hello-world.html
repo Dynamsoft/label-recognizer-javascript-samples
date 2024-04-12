@@ -7,12 +7,12 @@
     <meta name="description" content="Quickly recognize labels with Dynamsoft Label Recognizer from a live camera stream.">
     <meta name="keywords" content="camera based label recognizing">
     <title>Dynamsoft Label Recognize Sample - Hello World (recognizing via Camera)</title>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.0.32/dist/core.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.0.40/dist/license.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.0.21/dist/utility.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.0.30/dist/dlr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.32/dist/cvr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.1/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/license.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.10/dist/utility.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/dlr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/cvr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/dce.js"></script>
 </head>
 
 <body>
@@ -63,7 +63,6 @@
             const view = await Dynamsoft.DCE.CameraView.createInstance();
             cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance(view);
             cameraViewContainer.append(view.getUIElement());
-            cameraEnhancer.setScanRegion({x: 10,y: 30,width: 80,height: 20,isMeasuredInPercentage: true,})
         }
 
         /**
@@ -89,10 +88,10 @@
 
             // Filter out unchecked and duplicate results.
             const filter = new Dynamsoft.Utility.MultiFrameResultCrossFilter();
-            filter.enableResultCrossVerification(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text lines.
+            filter.enableResultCrossVerification("text_line", true); // Filter out unchecked text lines.
             // Filter out duplicate text lines within 3 seconds.
-            filter.enableResultDeduplication(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
-            filter.setDuplicateForgetTime(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+            filter.enableResultDeduplication("text_line", true);
+            filter.setDuplicateForgetTime("text_line", 3000);
             await router.addResultFilter(filter);
         })();
 

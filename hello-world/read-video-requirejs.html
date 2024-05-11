@@ -21,11 +21,11 @@
     <script>
         requirejs.config({
             paths: {
-                "dynamsoft-core": "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/core",
-                "dynamsoft-license": "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/license",
-                "dynamsoft-utility": "https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.10/dist/utility",
-                "dynamsoft-label-recognizer": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/dlr",
-                "dynamsoft-capture-vision-router": "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/cvr",
+                "dynamsoft-core": "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.30/dist/core",
+                "dynamsoft-license": "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.20/dist/license",
+                "dynamsoft-utility": "https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.20/dist/utility",
+                "dynamsoft-label-recognizer": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.30/dist/dlr",
+                "dynamsoft-capture-vision-router": "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.30/dist/cvr",
                 "dynamsoft-camera-enhancer": "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/dce",
             },
         });
@@ -47,15 +47,16 @@
                 { CameraView, CameraEnhancer }
             ) {
             CoreModule.engineResourcePaths = {
-                std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.0/dist/",
-                dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.10/dist/",
-                core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.10/dist/",
-                license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.10/dist/",
-                cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.10/dist/",
-                dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.10/dist/",
+                std: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.10/dist/',
+                dip: 'https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.30/dist/',
+                core: "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.30/dist/",
+                license: "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.20/dist/",
+                cvr: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.30/dist/",
+                dlr: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.30/dist/",
                 dce: "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/",
-                dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.10/dist/',
-                dlrData: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/"
+                dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.20/dist/',
+                dlrData: 'https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/',
+                utility: 'https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.20/dist/'
             };
 
             const cameraViewContainer = document.querySelector("#div-ui-container");

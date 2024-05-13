@@ -26,9 +26,9 @@ Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag,
 }
 
 Dynamsoft.Core.CoreModule.engineResourcePaths = {
-    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.0/dist/",
-    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.10/dist/",
-    dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.10/dist/',
+    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.10/dist/",
+    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.30/dist/",
+    dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.20/dist/',
     dlrData: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/"
 };
 

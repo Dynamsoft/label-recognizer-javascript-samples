@@ -20,22 +20,22 @@
     <script type="importmap">
         {
             "imports": {
-                "dynamsoft-core": "https://cdn.jsdelivr.net/npm/dynamsoft-core@3.2.30/dist/core.mjs",
-                "dynamsoft-license": "https://cdn.jsdelivr.net/npm/dynamsoft-license@3.2.20/dist/license.mjs",
-                "dynamsoft-utility": "https://cdn.jsdelivr.net/npm/dynamsoft-utility@1.2.20/dist/utility.mjs",
-                "dynamsoft-label-recognizer": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer@3.2.30/dist/dlr.mjs",
-                "dynamsoft-capture-vision-router": "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.2.30/dist/cvr.mjs",
-                "dynamsoft-camera-enhancer": "https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@4.0.2/dist/dce.mjs"
+                "dynamsoft-label-recognizer-bundle": "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-bundle@3.2.3000/dist/dlr.bundle.mjs"
             }
         }
     </script>
     <script type="module">
-        import { CoreModule, EnumCapturedResultItemType } from "dynamsoft-core";
-        import { LicenseManager } from "dynamsoft-license";
-        import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
-        import { LabelRecognizerModule } from "dynamsoft-label-recognizer";
-        import { CaptureVisionRouter, CapturedResultReceiver } from "dynamsoft-capture-vision-router";
-        import { CameraEnhancer, CameraView } from 'dynamsoft-camera-enhancer';
+        import { 
+            CoreModule, 
+            EnumCapturedResultItemType, 
+            LicenseManager,
+            MultiFrameResultCrossFilter,
+            LabelRecognizerModule,
+            CaptureVisionRouter,
+            CapturedResultReceiver,
+            CameraEnhancer,
+            CameraView
+        } from "dynamsoft-label-recognizer-bundle";
 
         const cameraViewContainer = document.querySelector("#div-ui-container");
         const resultsContainer = document.querySelector("#div-results-container");

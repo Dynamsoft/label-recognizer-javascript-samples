@@ -17,6 +17,13 @@ Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMD
  * LICENSE ALERT - THE END 
  */
 
+Dynamsoft.Core.CoreModule.engineResourcePaths = {
+    std: "./node_modules/dynamsoft-capture-vision-std/dist/",
+    dip: "./node_modules/dynamsoft-image-processing/dist/",
+    dnn: "./node_modules/dynamsoft-capture-vision-dnn/dist/",
+    dlrData: "./node_modules/dynamsoft-label-recognizer-data/dist/",
+};
+
 Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag, progress) => {
     if (tag === "starting") {
         textLoading.style.display = "inline";
@@ -24,13 +31,6 @@ Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag,
         textLoading.style.display = "none";
     };
 }
-
-Dynamsoft.Core.CoreModule.engineResourcePaths = {
-    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.2.10/dist/",
-    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.2.30/dist/",
-    dnn: 'https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-dnn@1.0.20/dist/',
-    dlrData: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.10/dist/"
-};
 
 /**
  * Preloads the `LabelRecognizer` module

@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { EnumCapturedResultItemType } from "dynamsoft-core";
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
 import { LabelRecognizerModule, type RecognizedTextLinesResult } from "dynamsoft-label-recognizer";
@@ -54,10 +53,10 @@ export class VideoRecognizerComponent {
 
       // Filter out unchecked and duplicate results.
       const filter = new MultiFrameResultCrossFilter();
-      filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text.
+      filter.enableResultCrossVerification("text_line", true); // Filter out unchecked text.
       // Filter out duplicate text lines within 3 seconds.
-      filter.enableResultDeduplication(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
-      filter.setDuplicateForgetTime(EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+      filter.enableResultDeduplication("text_line", true);
+      filter.setDuplicateForgetTime("text_line", 3000);
       await router.addResultFilter(filter);
 
       // Open camera and start scanning text.

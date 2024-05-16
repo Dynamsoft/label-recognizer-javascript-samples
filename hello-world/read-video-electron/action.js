@@ -17,6 +17,13 @@ Dynamsoft.License.LicenseManager.initLicense("DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMD
  * LICENSE ALERT - THE END 
  */
 
+Dynamsoft.Core.CoreModule.engineResourcePaths = {
+    std: "./node_modules/dynamsoft-capture-vision-std/dist/",
+    dip: "./node_modules/dynamsoft-image-processing/dist/",
+    dnn: "./node_modules/dynamsoft-capture-vision-dnn/dist/",
+    dlrData: "./node_modules/dynamsoft-label-recognizer-data/dist/",
+};
+
 Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag, progress) => {
     if (tag === "starting") {
         textLoading.style.display = "inline";
@@ -24,12 +31,6 @@ Dynamsoft.DLR.LabelRecognizerModule.onDataLoadProgressChanged = (modelPath, tag,
         textLoading.style.display = "none";
     };
 }
-
-Dynamsoft.Core.CoreModule.engineResourcePaths = {
-    std: "https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-std@1.0.0/dist/",
-    dip: "https://cdn.jsdelivr.net/npm/dynamsoft-image-processing@2.0.30/dist/",
-    dcm: "https://cdn.jsdelivr.net/npm/dynamsoft-label-recognizer-data@1.0.0/dist/"
-};
 
 /**
  * Preloads the `LabelRecognizer` module
@@ -68,10 +69,10 @@ let cvrReady = (async function initCVR() {
 
     // Filter out unchecked and duplicate results.
     const filter = new Dynamsoft.Utility.MultiFrameResultCrossFilter();
-    filter.enableResultCrossVerification(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true); // Filter out unchecked text lines.
+    filter.enableResultCrossVerification("text_line", true); // Filter out unchecked text lines.
     // Filter out duplicate text lines within 3 seconds.
-    filter.enableResultDeduplication(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
-    filter.setDuplicateForgetTime(Dynamsoft.Core.EnumCapturedResultItemType.CRIT_TEXT_LINE, 3000);
+    filter.enableResultDeduplication("text_line", true);
+    filter.setDuplicateForgetTime("text_line", 3000);
     await router.addResultFilter(filter);
 })();
 

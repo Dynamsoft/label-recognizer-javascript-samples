@@ -1,5 +1,7 @@
 # Dynamsoft Lable Recognizer samples for the web
 
+⚠️ **Notice:** This repository has been **archived**. For the latest examples utilizing label recognition features, please visit the **[Dynamsoft Capture Vision Samples](https://github.com/Dynamsoft/capture-vision-javascript-samples)** repository. 🚀
+
 This repository contains multiple samples that demonstrates how to use [Dynamsoft Lable Recognizer JavaScript Edition](https://www.dynamsoft.com/label-recognition/programming/javascript/?ver=latest).
 
 [User Guide](https://www.dynamsoft.com/label-recognition/docs/web/programming/javascript/user-guide/index.html)
